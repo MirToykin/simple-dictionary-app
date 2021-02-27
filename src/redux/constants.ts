@@ -1,0 +1,4 @@
+export const SET_AUTH_DATA = 'SET_AUTH_DATA'
+
+export const SET_IS_FETCHING = 'SET_IS_FETCHING'
+export const SWITCH_COLOR_THEME = 'SWITCH_COLOR_THEME'

@@ -1,22 +1,18 @@
 import React from 'react';
-import {Text, View} from 'react-native';
 import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from "@react-navigation/stack";
 import RootNavigator from './navigators/RootNavigator'
+import {configureStore} from "./redux/store/configureStore";
+import {Provider} from "react-redux";
 
-const Stack = createStackNavigator()
-
-const LoginScreen = () => (
-  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    <Text>Вход</Text>
-  </View>
-)
+const store = configureStore();
 
 function App() {
   return (
-    <NavigationContainer>
-      <RootNavigator />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

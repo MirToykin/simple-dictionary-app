@@ -1,28 +1,41 @@
 import React, {useEffect} from 'react';
-import {Text, View} from "react-native";
+import {Text, TextInput, TouchableOpacity, View} from "react-native";
+import axios, {AxiosInstance, AxiosResponse} from "axios";
+import LoginForm from "../components/forms/LoginForm";
 
 const LoginScreen = () => {
-  useEffect(() => {
-    fetch('http://api-simpledictionary.ru/api/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'miroslav.toykin@gmail.com',
-        password: 'Njqrby6022',
-        rememberMe: false
-      }),
-    }).then(data => {
-        return data.json();
-    }).then(json => {
-        console.log(json);
-    })
+
+  const ajax = axios.create({
+    baseURL: "http://api-simpledictionary.ru/api/"
   })
+
+  const onSignInPress = () => {
+    console.log('pressed')
+    ajax.post('login', {
+      email: 'miroslav.toykin@gmail.com',
+      password: 'Njqrby6022'
+    }).then(res => {
+      console.log(res.data.user)
+    })
+  }
+
   return (
     <View style={{
       flex:1,
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <Text>Войти</Text>
+      <Text>Авторизация</Text>
+      <LoginForm/>
+      <TouchableOpacity
+        // style={styles.button}
+        activeOpacity={0.7}
+        onPress={() => {
+          onSignInPress()
+        }}
+      >
+        <Text>Войти</Text>
+      </TouchableOpacity>
     </View>
   );
 };
