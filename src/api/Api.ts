@@ -1,5 +1,6 @@
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 import {TLoginData, TRegData} from "../redux/actions/authActions";
+import {OptionsType} from "../types";
 
 // type TGetSetResponse = {
 //   words: Array<WordType>
@@ -46,10 +47,10 @@ class Api {
     return this.ajax.post<TAuthResponse>(endpoint, data).then(res => res.data.user)
   }
 
-  // logout(options: OptionsType) {
-  //   this.ajax.post('logout', null, options)
-  // }
-  //
+  logout(options: OptionsType) {
+    this.ajax.post('logout', null, options)
+  }
+
   // addToSet(data: TAddToSetData, options: OptionsType) {
   //   return this.ajax.post<TAddAndEditResponse>(`words`, data, options).then(res => res.data.word)
   // }

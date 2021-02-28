@@ -1,4 +1,5 @@
 import {SET_AUTH_DATA, SET_IS_FETCHING} from "../constants"
+import {OptionsType} from "../../types";
 
 let initialState = {
   id: null as number | null,
@@ -7,7 +8,8 @@ let initialState = {
   isFetching: false,
   isAuth: false,
   token: null as string | null,
-  rememberMe: false
+  rememberMe: false,
+  options: null as OptionsType | null
 }
 
 // fixme - убрать isFetching в appReducer

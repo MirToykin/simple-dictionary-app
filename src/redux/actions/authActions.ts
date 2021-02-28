@@ -4,6 +4,7 @@ import {SET_AUTH_DATA} from "../constants";
 import {setIsFetching, SetIsFetchingActionType} from "./appActions";
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType} from "../store/configureStore";
+import {OptionsType} from "../../types";
 
 const api: any = new Api();
 
@@ -50,7 +51,12 @@ export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, 
   try {
     const userData = await api.auth('login', loginData);
     const rememberMe = loginData.rememberMe;
-    dispatch(setAuthData({...userData, isAuth: true, rememberMe}));
+    const options:OptionsType = {
+      headers: {
+        "Authorization": `Bearer ${userData.token}`
+      }
+    }
+    dispatch(setAuthData({...userData, isAuth: true, rememberMe, options}));
   } catch (e) {
     let error;
 
@@ -71,7 +77,12 @@ export const register = (regData: TRegData): AuthThunkType => async (dispatch, g
   try {
     const userData = await api.auth('register', regData);
     const rememberMe = regData.rememberMe;
-    dispatch(setAuthData({...userData, isAuth: true, rememberMe}));
+    const options:OptionsType = {
+      headers: {
+        "Authorization": `Bearer ${userData.token}`
+      }
+    }
+    dispatch(setAuthData({...userData, isAuth: true, rememberMe, options}));
   } catch (e) {
     let error;
     if (e.response) {
