@@ -49,8 +49,8 @@ export const setAuthData = (payload: SetAuthDataPayloadType): SetAuthDataActionT
 export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, getState) => {
   dispatch(setIsFetching(true));
   try {
-    const userData = await api.auth('login', loginData);
-    const rememberMe = loginData.rememberMe;
+    const userData = await api.auth('login', loginData)
+    const rememberMe = loginData.rememberMe
     const options:OptionsType = {
       headers: {
         "Authorization": `Bearer ${userData.token}`
@@ -61,13 +61,12 @@ export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, 
     let error;
 
     if (e.response && e.response.status === 401) {
-      error = 'Неверный логин или пароль';
+      error = 'Неверный логин или пароль!';
     } else {
       error = e.response && e.response.data.message;
     }
-    throw new SubmissionError({
-      _error: error ? error : 'Что-то пошло не так'
-    });
+
+    throw new Error(error)
   }
   dispatch(setIsFetching(false));
 }
