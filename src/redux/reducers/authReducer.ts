@@ -1,5 +1,6 @@
-import {SET_AUTH_DATA, SET_IS_FETCHING} from "../constants"
+import {SET_AUTH_DATA} from "../constants"
 import {OptionsType} from "../../types";
+import {SetAuthDataActionType} from "../actions/authActions";
 
 let initialState = {
   id: null as number | null,
@@ -16,12 +17,12 @@ let initialState = {
 
 export type InitialStateType = typeof initialState
 
-const authReducer = (state: InitialStateType = initialState, action:any): InitialStateType => {
+type ActionType = SetAuthDataActionType
+
+const authReducer = (state: InitialStateType = initialState, action:ActionType): InitialStateType => {
   switch (action.type) {
     case SET_AUTH_DATA:
       return {...state, ...action.payload}
-    case SET_IS_FETCHING:
-      return {...state, isFetching: action.payload}
     default:
       return state
   }

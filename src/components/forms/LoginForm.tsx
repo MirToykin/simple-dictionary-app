@@ -1,22 +1,13 @@
 import React, {FC, useState} from 'react'
 import {Field, InjectedFormProps, reduxForm, formValueSelector, SubmissionError} from 'redux-form'
-import {TextInput, TouchableOpacity, View, Text, StyleSheet} from "react-native";
+import {TextInput, TouchableOpacity, View, Text, StyleSheet, StyleProp, ViewStyle} from "react-native";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, login, TLoginData} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
+import { Button } from 'react-native-elements'
+import {renderInput} from "../../assets/formElems";
 
-// @ts-ignore
-const renderInput = ({secureTextEntry=false, placeholder, input: { onChange, ...restInput }}) => {
-  return <TextInput
-    placeholderTextColor={'rgba(255,255,255, 0.7)'}
-    secureTextEntry={secureTextEntry}
-    placeholder={placeholder}
-    style={styles.input}
-    onChangeText={onChange}
-    {...restInput}
-  />
-}
 
 const primaryColor = '#fe9700'
 const primaryBackgroundColor = '#303030'
@@ -27,6 +18,7 @@ const LoginForm: FC<InjectedFormProps<TLoginData>> = ({handleSubmit}) => {
   const thunkDispatch: ThunkDispatch<AppStateType, unknown, AuthActionType> = useDispatch()
 
   const form = useSelector((state: AppStateType) => state.form.LoginForm)
+  const isFetching = useSelector((state: AppStateType) => state.app.isFetching)
   const email = form && form.values && form.values.email
   const pwd = form && form.values && form.values.password
   const [error, setError] = useState('')
@@ -50,13 +42,31 @@ const LoginForm: FC<InjectedFormProps<TLoginData>> = ({handleSubmit}) => {
       <Field
         name="email"
         component={renderInput}
-        style={styles.input}
         placeholder={'Адрес эл. почты'}
+        leftIcon={{
+          name: 'envelope',
+          size: 15
+        }}
       />
-      <Field name="password" secureTextEntry={true} component={renderInput} placeholder={'Пароль'}/>
-      <TouchableOpacity onPress={handleSubmit(submit)} style={styles.tchOp}>
-        <Text style={styles.button}>Войти</Text>
-      </TouchableOpacity>
+      <Field
+        name="password"
+        secureTextEntry={true}
+        component={renderInput}
+        placeholder={'Пароль'}
+        leftIcon={{
+          name: 'unlock-alt',
+        }}
+      />
+      <Button
+        title="Войти"
+        type="outline"
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+        loadingProps={styles.buttonLoading}
+        containerStyle={styles.buttonContainer}
+        onPress={handleSubmit(submit)}
+        loading={isFetching}
+      />
       <View style={styles.additionalButtonsContainer}>
         <TouchableOpacity onPress={() => {}}>
           <Text style={styles.additionalButtonText}>Забыли пароль?</Text>
@@ -75,12 +85,16 @@ const LoginForm: FC<InjectedFormProps<TLoginData>> = ({handleSubmit}) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: primaryColor,
-    color: primaryBackgroundColor,
-    height: 40,
-    lineHeight: 40,
-    textAlign: 'center',
-    borderRadius: 8,
-    fontWeight: 'bold',
+    marginHorizontal: 25,
+  },
+  buttonTitle: {
+    color: primaryBackgroundColor
+  },
+  buttonLoading: {
+    color: primaryBackgroundColor
+  },
+  buttonContainer: {
+    marginBottom: 20
   },
   additionalButtonsContainer: {
     flexDirection: 'row',

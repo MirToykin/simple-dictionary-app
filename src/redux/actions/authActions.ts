@@ -47,7 +47,7 @@ export const setAuthData = (payload: SetAuthDataPayloadType): SetAuthDataActionT
 }
 
 export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, getState) => {
-  dispatch(setIsFetching(true));
+  dispatch(setIsFetching(true))
   try {
     const userData = await api.auth('login', loginData)
     const rememberMe = loginData.rememberMe
@@ -61,11 +61,12 @@ export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, 
     let error;
 
     if (e.response && e.response.status === 401) {
-      error = 'Неверный логин или пароль!';
+      error = 'Неверный логин и/или пароль';
     } else {
       error = e.response && e.response.data.message;
     }
 
+    dispatch(setIsFetching(false));
     throw new Error(error)
   }
   dispatch(setIsFetching(false));
