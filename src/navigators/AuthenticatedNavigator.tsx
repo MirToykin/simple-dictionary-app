@@ -1,9 +1,8 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import {Text, TouchableOpacity, View} from "react-native";
-import ProfileScreen from "../screens/authScreens/ProfileScreen";
+import {Text, View} from "react-native";
+import ProfileScreen from "../screens/loggedInScreens/ProfileScreen";
 import DictionariesNavigator from "./DictionariesNavigator";
-import {Header} from "react-native-elements";
 import AppHeader from "../components/AppHeader";
 
 const Drawer = createDrawerNavigator()

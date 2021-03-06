@@ -7,14 +7,14 @@ type TProps = {
   navigation: StackNavigationProp<RootStackParamList, 'LogIn'>
 }
 
-const LoginScreen: FC<TProps> = ({navigation}) => {
+const RegistrationScreen: FC<TProps> = ({navigation}) => {
 
   return (
     <AuthScreen
-      type={'login'}
+      type={'registration'}
       navigation={navigation}
     />
   );
 };
 
-export default LoginScreen;
+export default RegistrationScreen;

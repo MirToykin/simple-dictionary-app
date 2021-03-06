@@ -1,23 +1,36 @@
 import React from 'react';
-import {createStackNavigator} from "@react-navigation/stack";
+import {CardStyleInterpolators, createStackNavigator} from "@react-navigation/stack";
 import LoginScreen from "../screens/LoginScreen";
 import {useSelector} from "react-redux";
 import {AppStateType} from "../redux/store/configureStore";
 import AuthenticatedNavigator from "./AuthenticatedNavigator";
+import RegistrationScreen from "../screens/RegistrationScreen";
 
-const Stack = createStackNavigator()
+export type RootStackParamList = {
+  Main: undefined
+  LogIn: undefined
+  Registration: undefined
+}
+
+const Stack = createStackNavigator<RootStackParamList>()
 
 const RootNavigator = () => {
   const isAuth = useSelector((state:AppStateType) => state.auth.isAuth)
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{
+      headerShown: false,
+      gestureEnabled: true,
+      gestureDirection: 'horizontal',
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+    }}>
       {isAuth ? (
         <>
-          <Stack.Screen name="Главная" component={AuthenticatedNavigator}/>
+          <Stack.Screen name="Main" component={AuthenticatedNavigator}/>
         </>
       ) : (
         <>
-          <Stack.Screen name="Вход" component={LoginScreen}/>
+          <Stack.Screen name="LogIn" component={LoginScreen}/>
+          <Stack.Screen name="Registration" component={RegistrationScreen} />
         </>
       )}
     </Stack.Navigator>

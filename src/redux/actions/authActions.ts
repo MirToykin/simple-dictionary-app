@@ -1,4 +1,3 @@
-import {SubmissionError} from "redux-form";
 import Api from "../../api/Api";
 import {SET_AUTH_DATA} from "../constants";
 import {setIsFetching, SetIsFetchingActionType} from "./appActions";
@@ -36,7 +35,7 @@ export type TRegData = {
   email: string,
   password: string,
   password_confirmation: string,
-  rememberMe: boolean
+  rememberMe?: boolean
 }
 
 export const setAuthData = (payload: SetAuthDataPayloadType): SetAuthDataActionType => {
@@ -46,7 +45,7 @@ export const setAuthData = (payload: SetAuthDataPayloadType): SetAuthDataActionT
   }
 }
 
-export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, getState) => {
+export const login = (loginData: TLoginData): AuthThunkType => async (dispatch) => {
   dispatch(setIsFetching(true))
   try {
     const userData = await api.auth('login', loginData)
@@ -72,7 +71,7 @@ export const login = (loginData: TLoginData): AuthThunkType => async (dispatch, 
   dispatch(setIsFetching(false));
 }
 
-export const register = (regData: TRegData): AuthThunkType => async (dispatch, getState) => {
+export const register = (regData: TRegData): AuthThunkType => async (dispatch) => {
   dispatch(setIsFetching(true));
   try {
     const userData = await api.auth('register', regData);
@@ -84,19 +83,18 @@ export const register = (regData: TRegData): AuthThunkType => async (dispatch, g
     }
     dispatch(setAuthData({...userData, isAuth: true, rememberMe, options}));
   } catch (e) {
-    let error;
+    let error = 'Что-то пошло не так';
     if (e.response) {
       error = e.response.data.message
     }
-    throw new SubmissionError({
-      _error: error ? error : 'Что-то пошло не так'
-    });
+    dispatch(setIsFetching(false));
+    throw new Error(error)
   }
   dispatch(setIsFetching(false));
 }
 
 // export const logout = (options: OptionsType): AuthThunkType => async (dispatch, getState) => {
-export const logout = (options: any): AuthThunkType => async (dispatch, getState) => {
+export const logout = (options: any): AuthThunkType => async (dispatch) => {
   dispatch(setIsFetching(true));
 
   try {
