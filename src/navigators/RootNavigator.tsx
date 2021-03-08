@@ -5,11 +5,13 @@ import {useSelector} from "react-redux";
 import {AppStateType} from "../redux/store/configureStore";
 import AuthenticatedNavigator from "./AuthenticatedNavigator";
 import RegistrationScreen from "../screens/RegistrationScreen";
+import ResetPwdScreen from "../screens/ResetPwdScreen";
 
 export type RootStackParamList = {
   Main: undefined
   LogIn: undefined
   Registration: undefined
+  ResetPwd: undefined
 }
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -31,6 +33,7 @@ const RootNavigator = () => {
         <>
           <Stack.Screen name="LogIn" component={LoginScreen}/>
           <Stack.Screen name="Registration" component={RegistrationScreen} />
+          <Stack.Screen name="ResetPwd" component={ResetPwdScreen} />
         </>
       )}
     </Stack.Navigator>

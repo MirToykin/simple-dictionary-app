@@ -12,7 +12,7 @@ import {RootStackParamList} from "../../navigators/RootNavigator";
 import {authFormStyles  as styles} from '../../assets/styles'
 
 type TProps = {
-  navigation: StackNavigationProp<RootStackParamList, 'LogIn'>
+  navigation: StackNavigationProp<RootStackParamList, 'LogIn' | 'Registration' | 'ResetPwd'>
 }
 
 const LoginForm: FC<TProps & InjectedFormProps<TLoginData, TProps>> = ({handleSubmit, navigation}) => {
@@ -69,7 +69,7 @@ const LoginForm: FC<TProps & InjectedFormProps<TLoginData, TProps>> = ({handleSu
         loading={isFetching}
       />
       <View style={styles.additionalButtonsContainer}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => {navigation.navigate('ResetPwd')}}>
           <Text style={styles.additionalButtonText}>Забыли пароль?</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {navigation.navigate('Registration')}}>

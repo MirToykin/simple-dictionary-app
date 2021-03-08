@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, logout} from "../../redux/actions/authActions";

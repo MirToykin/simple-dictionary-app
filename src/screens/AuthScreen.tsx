@@ -5,10 +5,11 @@ import {StyleSheet, View} from "react-native";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {RootStackParamList} from "../navigators/RootNavigator";
 import RegistrationForm from "../components/forms/RegistrationForm";
+import ResetPwdForm from "../components/forms/ResetPwdForm";
 
 type TProps = {
   type: string,
-  navigation: StackNavigationProp<RootStackParamList, 'LogIn'>
+  navigation: StackNavigationProp<RootStackParamList, 'LogIn' | 'Registration' | 'ResetPwd'>
 }
 
 const AuthScreen: FC<TProps> = ({type, navigation}) => {
@@ -23,6 +24,7 @@ const AuthScreen: FC<TProps> = ({type, navigation}) => {
       />
       {type === 'login' && <LoginForm navigation={navigation}/>}
       {type === 'registration' && <RegistrationForm navigation={navigation}/>}
+      {type === 'reset' && <ResetPwdForm navigation={navigation}/>}
     </View>
   );
 };

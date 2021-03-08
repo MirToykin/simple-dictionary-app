@@ -18,52 +18,32 @@ type TProps = {
 const RegistrationForm: FC<TProps & InjectedFormProps<TRegData, TProps>> = ({handleSubmit, navigation}) => {
   const thunkDispatch: ThunkDispatch<AppStateType, unknown, AuthActionType> = useDispatch()
 
-  const form = useSelector((state: AppStateType) => state.form.RegistrationForm)
+  const form = useSelector((state: AppStateType) => state.form.ResetPwdForm)
   const isFetching = useSelector((state: AppStateType) => state.app.isFetching)
-  const name = form && form.values && form.values.name
   const email = form && form.values && form.values.email
-  const pwd = form && form.values && form.values.password
-  const pwdConfirmation = form && form.values && form.values.password_confirmation
   const [error, setError] = useState('')
 
 
   const submit = (regData: TRegData) => {
-    if (name && email && pwd && pwdConfirmation) {
+    if (email) {
       thunkDispatch(register(regData)).catch(err => {
         setError(err.message)
       })
     }
     else {
-      setError('Все поля должны быть заполнены')
+      setError('Введите E-mail')
     }
   }
 
   return (
     <View>
       <Field
-        name="name"
-        component={renderInput}
-        placeholder={'Ваше имя'}
-      />
-      <Field
         name="email"
         component={renderInput}
         placeholder={'Адрес эл. почты'}
       />
-      <Field
-        name="password"
-        secureTextEntry={true}
-        component={renderInput}
-        placeholder={'Пароль'}
-      />
-      <Field
-        name="password_confirmation"
-        secureTextEntry={true}
-        component={renderInput}
-        placeholder={'Повторите пароль'}
-      />
       <Button
-        title="Зарегистрироваться"
+        title="Восстановить пароль"
         type="outline"
         buttonStyle={styles.button}
         titleStyle={styles.buttonTitle}
@@ -72,9 +52,12 @@ const RegistrationForm: FC<TProps & InjectedFormProps<TRegData, TProps>> = ({han
         onPress={handleSubmit(submit)}
         loading={isFetching}
       />
-      <View style={{...styles.additionalButtonsContainer, ...styles.additionalButtonsContainerRegister}}>
+      <View style={{...styles.additionalButtonsContainer}}>
         <TouchableOpacity onPress={() => {navigation.navigate('LogIn')}}>
           <Text style={styles.additionalButtonText}>Войти</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {navigation.navigate('Registration')}}>
+          <Text style={styles.additionalButtonText}>Зарегистрироваться</Text>
         </TouchableOpacity>
       </View>
       {!!error && <Text style={styles.error}>
@@ -85,5 +68,5 @@ const RegistrationForm: FC<TProps & InjectedFormProps<TRegData, TProps>> = ({han
 }
 
 export default reduxForm<TRegData, TProps>({
-  form: 'RegistrationForm'
+  form: 'ResetPwdForm'
 })(RegistrationForm)

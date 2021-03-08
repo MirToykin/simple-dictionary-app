@@ -4,17 +4,17 @@ import {StackNavigationProp} from "@react-navigation/stack";
 import {RootStackParamList} from "../navigators/RootNavigator";
 
 type TProps = {
-  navigation: StackNavigationProp<RootStackParamList, 'Registration'>
+  navigation: StackNavigationProp<RootStackParamList, 'ResetPwd'>
 }
 
-const RegistrationScreen: FC<TProps> = ({navigation}) => {
+const ResetPwdScreen: FC<TProps> = ({navigation}) => {
 
   return (
     <AuthScreen
-      type={'registration'}
+      type={'reset'}
       navigation={navigation}
     />
   );
 };
 
-export default RegistrationScreen;
+export default ResetPwdScreen;
