@@ -3,26 +3,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements'
 import {Text, View} from "react-native";
 import AppHeader from "../components/AppHeader";
+import NextSetScreen from "../screens/loggedInScreens/dictionaries/NextSetScreen";
+import {secondaryBackgroundColor} from "../assets/styles";
 
 const Tab = createBottomTabNavigator()
-
-const NextScreen = () => {
-  return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <Text>На очереди !</Text>
-      <Icon
-        raised
-        name='angle-double-right'
-        type='font-awesome'
-        color='#f50'
-        onPress={() => console.log('hello')} />
-    </View>
-  );
-}
 
 const CurrentScreen = () => {
   return (
@@ -53,17 +37,15 @@ const DictionariesNavigator = () => {
     <>
       <AppHeader/>
       <Tab.Navigator tabBarOptions={{
-        // tabStyle: {
-        //   flex: 1,
-        //   justifyContent: 'center',
-        //   alignItems: 'center'
-        // }
         activeTintColor: '#f50',
-        inactiveTintColor: '#ccc'
+        inactiveTintColor: '#fff',
+        style: {
+          backgroundColor: secondaryBackgroundColor
+        }
       }}>
         <Tab.Screen
           name="На очереди"
-          component={NextScreen}
+          component={NextSetScreen}
           options={{
             tabBarLabel: 'На очереди',
             tabBarIcon: ({ color, size }) => (

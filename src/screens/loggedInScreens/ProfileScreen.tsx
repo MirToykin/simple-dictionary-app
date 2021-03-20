@@ -29,7 +29,7 @@ const ProfileScreen = () => {
   return (
     <>
       <AppHeader/>
-      <View style={styles.container}>
+      <View style={styles.title}>
         <Image
           source={UserPhoto}
           style={styles.avatar}
@@ -48,7 +48,7 @@ const ProfileScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  title: {
     flex: 1,
     alignItems: 'center',
   },

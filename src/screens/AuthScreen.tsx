@@ -14,7 +14,7 @@ type TProps = {
 
 const AuthScreen: FC<TProps> = ({type, navigation}) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.title}>
       <Icon
         style={styles.icon}
         name='book'
@@ -30,7 +30,7 @@ const AuthScreen: FC<TProps> = ({type, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  title: {
     backgroundColor: '#303030',
     flex:1,
     justifyContent: 'center',

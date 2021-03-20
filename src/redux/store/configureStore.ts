@@ -5,11 +5,13 @@ import authReducer from "../reducers/authReducer";
 import appReducer from "../reducers/appReducer";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer } from 'redux-persist';
+import wordsReducer from "../reducers/wordsReducer";
 
 const rootReducer = combineReducers({
   form: formReducer,
   auth: authReducer,
   app: appReducer,
+  words: wordsReducer
 })
 
 const persistConfig = {

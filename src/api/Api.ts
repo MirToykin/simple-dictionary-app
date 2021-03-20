@@ -1,10 +1,10 @@
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 import {TLoginData, TRegData} from "../redux/actions/authActions";
-import {OptionsType} from "../types";
+import {OptionsType, SetNameType, WordType} from "../types/types";
 
-// type TGetSetResponse = {
-//   words: Array<WordType>
-// }
+type TGetSetResponse = {
+  words: Array<WordType>
+}
 
 type TAuthResponse = {
   user: {
@@ -39,9 +39,9 @@ class Api {
     });
   }
 
-  // getSet(set: SetNameType, uid: number, options: OptionsType) {
-  //   return this.ajax.get<TGetSetResponse>(`words/${set}/${uid}`, options).then(res => res.data.words)
-  // }
+  getSet(set: SetNameType, uid: number, options: OptionsType) {
+    return this.ajax.get<TGetSetResponse>(`words/${set}/${uid}`, options).then(res => res.data.words)
+  }
 
   auth(endpoint: string, data: TLoginData | TRegData) {
     return this.ajax.post<TAuthResponse>(endpoint, data).then(res => res.data.user)

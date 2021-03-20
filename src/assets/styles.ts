@@ -1,8 +1,11 @@
 import {StyleSheet} from "react-native";
 
-const primaryColor = '#fe9700'
-const primaryBackgroundColor = '#303030'
-const errorColor = '#f34336'
+export const primaryColor = '#fe9700'
+export const textPrimaryColor = '#fff'
+export const textSecondaryColor = 'rgba(255, 255, 255, 0.7)'
+export const primaryBackgroundColor = '#303030'
+export const secondaryBackgroundColor = '#424242'
+export const errorColor = '#f34336'
 
 export const authFormStyles = StyleSheet.create({
   button: {

@@ -3,7 +3,7 @@ import {SET_AUTH_DATA} from "../constants";
 import {setIsFetching, SetIsFetchingActionType} from "./appActions";
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType} from "../store/configureStore";
-import {OptionsType} from "../../types";
+import {OptionsType} from "../../types/types";
 
 const api: any = new Api();
 
