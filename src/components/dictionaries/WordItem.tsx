@@ -1,18 +1,24 @@
 import React, {FC, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
+import {StyleSheet, TouchableOpacity, View} from "react-native";
 import {Icon, Text} from 'react-native-elements';
 import {WordType} from "../../types/types";
 import {primaryBackgroundColor, primaryColor, secondaryBackgroundColor, textPrimaryColor} from "../../assets/styles";
 import { useDynamicStyle } from 'react-native-dynamic-styles'
-import {mapTranslations} from "../../assets/helpers";
+import {Dispatch} from "redux";
+import {useDispatch} from "react-redux";
+import {setSelectedWord, TSetSelectedWordAction} from "../../redux/actions/wordsActions";
+import {Swipeable} from "react-native-gesture-handler";
 
 type TProps = {
-  word: WordType
+  word: WordType,
+  setModalShown: (shown: boolean) => void
 }
 
-const WordItem: FC<TProps> = ({word}) => {
+const WordItem: FC<TProps> = ({word, setModalShown}) => {
   const [checked, setChecked] = useState(false)
   const [translationShown, setTranslationShown] = useState(false)
+
+  const dispatch: Dispatch<TSetSelectedWordAction> = useDispatch()
 
   const checkBoxStyle = useDynamicStyle(
     () => ({
@@ -27,6 +33,11 @@ const WordItem: FC<TProps> = ({word}) => {
     [checked]
   );
 
+  const onSelectWord = () => {
+    dispatch(setSelectedWord(word))
+    setModalShown(true)
+  }
+
   return (
     <View>
       <View style={styles.container}>
@@ -37,26 +48,15 @@ const WordItem: FC<TProps> = ({word}) => {
         >
           {checked && <Icon name={'check'} color={primaryColor} size={20}/>}
         </TouchableOpacity>
-        <View style={styles.textWrapper}>
+        <TouchableOpacity
+          style={styles.textWrapper}
+          onPress={onSelectWord}
+        >
           <Text style={styles.name}>
             {word.title}
           </Text>
-        </View>
-        <TouchableOpacity
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
-          onPress={() => setTranslationShown(!translationShown)}
-        >
-          <Icon
-            name='chevron-down'
-            type='evilicon'
-            size={40}
-            color={primaryColor}
-          />
         </TouchableOpacity>
       </View>
-      {translationShown && <ScrollView style={styles.body}>
-        {word.meanings.split('/').map(mapTranslations)}
-      </ScrollView>}
     </View>
   );
 };

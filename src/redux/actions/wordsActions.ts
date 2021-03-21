@@ -3,8 +3,16 @@ import {setIsFetching, SetIsFetchingActionType} from "./appActions"
 import Api, {TApi} from "../../api/Api"
 import {
   ADD_SET,
-  ADD_WORD_TO_STATE, SET_ADDED_MEANINGS, DELETE_FROM_ADDED_MEANINGS,
-  DELETE_WORD_FROM_STATE, PUSH_TO_ADDED_MEANINGS, SET_SEARCH_INPUT, UPDATE_WORD_IN_STATE, SET_SET_SIZE, SHUFFLE_SET
+  ADD_WORD_TO_STATE,
+  SET_ADDED_MEANINGS,
+  DELETE_FROM_ADDED_MEANINGS,
+  DELETE_WORD_FROM_STATE,
+  PUSH_TO_ADDED_MEANINGS,
+  SET_SEARCH_INPUT,
+  UPDATE_WORD_IN_STATE,
+  SET_SET_SIZE,
+  SHUFFLE_SET,
+  SET_SELECTED_WORD
 } from "../constants"
 import {SetAuthDataActionType, setAuthData} from "./authActions"
 import {OptionsType, SetNameType, WordType} from "../../types/types"
@@ -272,6 +280,17 @@ export type TShuffleSetAction = {
 export const shuffleSet = (payload: SetNameType): TShuffleSetAction => {
   return {
     type: SHUFFLE_SET,
+    payload
+  }
+}
+
+export type TSetSelectedWordAction = {
+  type: typeof SET_SELECTED_WORD,
+  payload: WordType | null
+}
+export const setSelectedWord = (payload: WordType): TSetSelectedWordAction => {
+  return {
+    type: SET_SELECTED_WORD,
     payload
   }
 }

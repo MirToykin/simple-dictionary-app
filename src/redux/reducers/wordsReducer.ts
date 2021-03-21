@@ -4,14 +4,14 @@ import {
   ADD_SET,
   UPDATE_WORD_IN_STATE,
   SET_SEARCH_INPUT,
-  PUSH_TO_ADDED_MEANINGS, DELETE_FROM_ADDED_MEANINGS, SET_ADDED_MEANINGS, SET_SET_SIZE, SHUFFLE_SET
+  PUSH_TO_ADDED_MEANINGS, DELETE_FROM_ADDED_MEANINGS, SET_ADDED_MEANINGS, SET_SET_SIZE, SHUFFLE_SET, SET_SELECTED_WORD
 } from "../constants"
 import {WordType} from "../../types/types"
 import {
   AddSetActionType, AddWordToStateActionType,
   DeleteFromAddedMeaningsActionType, DeleteWordFromStateActionType,
   PushToAddedMeaningsActionType, SetAddedMeaningsActionType,
-  SetSearchInputActionType, TSetSetSizeAction, TShuffleSetAction, UpdateWordInStateActionType
+  SetSearchInputActionType, TSetSelectedWordAction, TSetSetSizeAction, TShuffleSetAction, UpdateWordInStateActionType
 } from "../actions/wordsActions"
 
 let initialState = {
@@ -20,12 +20,13 @@ let initialState = {
   done: [] as Array<WordType>,
   searchInput: '',
   addedMeanings: [] as Array<string>,
-  setSize: 30 as number
+  setSize: 30 as number,
+  selectedWord: null as WordType | null
 }
 
 type ActionType = AddSetActionType | SetSearchInputActionType | PushToAddedMeaningsActionType |
   DeleteFromAddedMeaningsActionType | SetAddedMeaningsActionType | TSetSetSizeAction | TShuffleSetAction |
-  DeleteWordFromStateActionType | AddWordToStateActionType | UpdateWordInStateActionType
+  DeleteWordFromStateActionType | AddWordToStateActionType | UpdateWordInStateActionType | TSetSelectedWordAction
 
 type InitialStateType = typeof initialState
 
@@ -56,6 +57,8 @@ const wordsReducer = (state:InitialStateType = initialState, action:ActionType):
       return {...state, setSize: action.payload}
     case SHUFFLE_SET:
       return {...state, [action.payload]: state[action.payload].sort((a, b) => 0.5 - Math.random())}
+    case SET_SELECTED_WORD:
+      return {...state, selectedWord: action.payload}
     default:
       return state
   }

@@ -22,21 +22,21 @@ const mapTranslationStyles = StyleSheet.create({
 })
 
 
-export type TMapTranslations = (item: string, i: number) => Element
-export const mapTranslations: TMapTranslations = (item, i) => {
+export type TMapTranslations = (item: string, i: number, arr: Array<string>) => Element
+export const mapTranslations: TMapTranslations = (item, i, arr) => {
 
   return (
-    <View style={mapTranslationStyles.container}>
-      <TouchableOpacity
+    <View style={mapTranslationStyles.container} key={item}>
+      {arr.length > 1 && <TouchableOpacity
         style={mapTranslationStyles.delete}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
       >
         <Icon
-          name='close'
-          type='evilicon'
+          name='delete'
+          type='antdesign'
           color={errorColor}
         />
-      </TouchableOpacity>
+      </TouchableOpacity>}
       <View style={mapTranslationStyles.textContainer}>
         <Text style={mapTranslationStyles.text}>{item}</Text>
       </View>
