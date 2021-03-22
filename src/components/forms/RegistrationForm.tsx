@@ -6,7 +6,7 @@ import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, register, TRegData} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
 import { Button } from 'react-native-elements'
-import {renderInput} from "../../assets/formElems";
+import {renderAuthInput} from "../../assets/formElems";
 import {authFormStyles  as styles} from '../../assets/styles'
 import {StackNavigationProp} from "@react-navigation/stack";
 import {RootStackParamList} from "../../navigators/RootNavigator";
@@ -42,24 +42,24 @@ const RegistrationForm: FC<TProps & InjectedFormProps<TRegData, TProps>> = ({han
     <View>
       <Field
         name="name"
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Ваше имя'}
       />
       <Field
         name="email"
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Адрес эл. почты'}
       />
       <Field
         name="password"
         secureTextEntry={true}
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Пароль'}
       />
       <Field
         name="password_confirmation"
         secureTextEntry={true}
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Повторите пароль'}
       />
       <Button

@@ -7,7 +7,6 @@ import { useDynamicStyle } from 'react-native-dynamic-styles'
 import {Dispatch} from "redux";
 import {useDispatch} from "react-redux";
 import {setSelectedWord, TSetSelectedWordAction} from "../../redux/actions/wordsActions";
-import {Swipeable} from "react-native-gesture-handler";
 
 type TProps = {
   word: WordType,
@@ -16,7 +15,6 @@ type TProps = {
 
 const WordItem: FC<TProps> = ({word, setModalShown}) => {
   const [checked, setChecked] = useState(false)
-  const [translationShown, setTranslationShown] = useState(false)
 
   const dispatch: Dispatch<TSetSelectedWordAction> = useDispatch()
 

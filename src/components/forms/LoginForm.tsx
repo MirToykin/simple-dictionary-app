@@ -6,7 +6,7 @@ import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, login, TLoginData} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
 import { Button } from 'react-native-elements'
-import {renderInput} from "../../assets/formElems"
+import {renderAuthInput} from "../../assets/formElems"
 import { StackNavigationProp } from '@react-navigation/stack'
 import {RootStackParamList} from "../../navigators/RootNavigator";
 import {authFormStyles  as styles} from '../../assets/styles'
@@ -42,7 +42,7 @@ const LoginForm: FC<TProps & InjectedFormProps<TLoginData, TProps>> = ({handleSu
     <View>
       <Field
         name="email"
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Адрес эл. почты'}
         leftIcon={{
           name: 'envelope',
@@ -52,7 +52,7 @@ const LoginForm: FC<TProps & InjectedFormProps<TLoginData, TProps>> = ({handleSu
       <Field
         name="password"
         secureTextEntry={true}
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Пароль'}
         leftIcon={{
           name: 'unlock-alt',

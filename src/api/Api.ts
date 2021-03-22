@@ -1,6 +1,7 @@
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 import {TLoginData, TRegData} from "../redux/actions/authActions";
 import {OptionsType, SetNameType, WordType} from "../types/types";
+import {TEditWordData} from "../redux/actions/wordsActions";
 
 type TGetSetResponse = {
   words: Array<WordType>
@@ -18,9 +19,9 @@ type TAuthResponse = {
   }
 }
 
-// type TAddAndEditResponse = {
-//   word: WordType
-// }
+type TAddAndEditResponse = {
+  word: WordType
+}
 
 type TMoveResponse = {
   updatedWords: Array<number>
@@ -55,9 +56,9 @@ class Api {
   //   return this.ajax.post<TAddAndEditResponse>(`words`, data, options).then(res => res.data.word)
   // }
   //
-  // editWord(wordId: number, data: TEditWordData, options: OptionsType) {
-  //   return this.ajax.patch<TAddAndEditResponse>(`words/${wordId}`, data, options).then(res => res.data.word)
-  // }
+  editWord(wordId: number, data: TEditWordData, options: OptionsType) {
+    return this.ajax.patch<TAddAndEditResponse>(`words/${wordId}`, data, options).then(res => res.data.word)
+  }
   //
   // moveWords(data: {idsArr: Array<number>, setToMove: SetNameType}, options: OptionsType) {
   //   return this.ajax.post<TMoveResponse>(`words/move`, data, options).then(res => res.data.updatedWords)

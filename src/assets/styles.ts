@@ -43,3 +43,10 @@ export const authFormStyles = StyleSheet.create({
     fontWeight: 'bold'
   }
 })
+
+export const setScreenStyles = StyleSheet.create({
+  title: {
+    flex: 1,
+    alignItems: 'center'
+  }
+})

@@ -5,32 +5,10 @@ import {Text, View} from "react-native";
 import AppHeader from "../components/AppHeader";
 import NextSetScreen from "../screens/loggedInScreens/dictionaries/NextSetScreen";
 import {secondaryBackgroundColor} from "../assets/styles";
+import CurrentSetScreen from "../screens/loggedInScreens/dictionaries/CurrentSetScreen";
+import DoneSetScreen from "../screens/loggedInScreens/dictionaries/DoneSetScreen";
 
 const Tab = createBottomTabNavigator()
-
-const CurrentScreen = () => {
-  return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <Text>Текущий</Text>
-    </View>
-  );
-}
-
-const DoneScreen = () => {
-  return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <Text>Изученные</Text>
-    </View>
-  );
-}
 
 const DictionariesNavigator = () => {
   return (
@@ -55,7 +33,7 @@ const DictionariesNavigator = () => {
         />
         <Tab.Screen
           name="Текущий"
-          component={CurrentScreen}
+          component={CurrentSetScreen}
           options={{
             tabBarLabel: 'На изучении',
             tabBarIcon: ({ color, size }) => (
@@ -65,11 +43,11 @@ const DictionariesNavigator = () => {
         />
         <Tab.Screen
           name="Изученные"
-          component={DoneScreen}
+          component={DoneSetScreen}
           options={{
             tabBarLabel: 'Изучено',
             tabBarIcon: ({ color, size }) => (
-              <Icon name="check" color={color} size={size} type='font-awesome'/>
+              <Icon name="done-all" color={color} size={size} type='material'/>
             ),
           }}
         />
@@ -78,4 +56,4 @@ const DictionariesNavigator = () => {
   )
 }
 
-export default DictionariesNavigator;
+export default DictionariesNavigator

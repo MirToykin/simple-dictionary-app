@@ -6,7 +6,7 @@ import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, register, TRegData} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
 import { Button } from 'react-native-elements'
-import {renderInput} from "../../assets/formElems";
+import {renderAuthInput} from "../../assets/formElems";
 import {authFormStyles  as styles} from '../../assets/styles'
 import {StackNavigationProp} from "@react-navigation/stack";
 import {RootStackParamList} from "../../navigators/RootNavigator";
@@ -39,7 +39,7 @@ const RegistrationForm: FC<TProps & InjectedFormProps<TRegData, TProps>> = ({han
     <View>
       <Field
         name="email"
-        component={renderInput}
+        component={renderAuthInput}
         placeholder={'Адрес эл. почты'}
       />
       <Button

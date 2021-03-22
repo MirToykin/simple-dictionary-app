@@ -87,27 +87,27 @@ export type TEditWordData = {
 export type TEditWord = SetIsFetchingActionType | DeleteWordFromStateActionType | UpdateWordInStateActionType| SetAuthDataActionType
 export type EditWordThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TEditWord>
 
-// export const editWord = (setToRemoveFrom: SetNameType, wordId: number, data:TEditWordData, options: OptionsType): EditWordThunkType => async (dispatch) => {
-//   dispatch(setIsFetching(true))
-//   try {
-//     const word = await api.editWord(wordId, data, options)
-//
-//     dispatch(updateWordInState(word))
-//
-//   } catch (e) {
-//     if (e.response && e.response.status === 401) {
-//       dispatch(setAuthData({
-//         id: null,
-//         name: null,
-//         email: null,
-//         token: null,
-//         isAuth: false,
-//         rememberMe: false
-//       }))
-//     }
-//   }
-//   dispatch(setIsFetching(false))
-// }
+export const editWord = (setToRemoveFrom: SetNameType, wordId: number, data:TEditWordData, options: OptionsType): EditWordThunkType => async (dispatch) => {
+  dispatch(setIsFetching(true))
+  try {
+    const word = await api.editWord(wordId, data, options)
+
+    dispatch(updateWordInState(word))
+
+  } catch (e) {
+    if (e.response && e.response.status === 401) {
+      dispatch(setAuthData({
+        id: null,
+        name: null,
+        email: null,
+        token: null,
+        isAuth: false,
+        rememberMe: false
+      }))
+    }
+  }
+  dispatch(setIsFetching(false))
+}
 
 
 export type TMoveAndDeleteWords = SetIsFetchingActionType | DeleteWordFromStateActionType| SetAuthDataActionType

@@ -73,8 +73,13 @@ const Set: FC<TProps> = ({setName}) => {
   const uid = useSelector((state: AppStateType) => state.auth.id)
   const options = useSelector((state: AppStateType) => state.auth.options)
 
+  const fetchData = async () => {
+    thunkDispatchGetSet(getWords(uid as number, options as OptionsType))
+  }
+
   useEffect(() => {
-    (async () => thunkDispatchGetSet(getWords(uid as number, options as OptionsType)))()
+    // (async () => thunkDispatchGetSet(getWords(uid as number, options as OptionsType)))()
+    fetchData()
   }, [setName])
 
   return (
@@ -84,7 +89,7 @@ const Set: FC<TProps> = ({setName}) => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         refreshing={isFetching}
-        // onRefresh={this.onRefresh}
+        onRefresh={fetchData}
         // onEndReached={this.onScrollToEnd}
         onEndReachedThreshold={0.2}
         // initialNumToRender={20}

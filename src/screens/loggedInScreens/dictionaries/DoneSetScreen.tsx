@@ -3,12 +3,12 @@ import {StyleSheet, View} from "react-native";
 import Set from "../../../components/dictionaries/Set";
 import {setScreenStyles} from "../../../assets/styles";
 
-const NextSetScreen = () => {
+const DoneSetScreen = () => {
   return (
     <View style={setScreenStyles.title}>
-      <Set setName={'next'}/>
+      <Set setName={'done'}/>
     </View>
   );
 };
 
-export default NextSetScreen;
+export default DoneSetScreen;
