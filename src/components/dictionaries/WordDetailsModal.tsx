@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {
   Dimensions,
   Modal,
@@ -27,6 +27,7 @@ import {
 } from "../../redux/actions/wordsActions";
 import {ThunkDispatch} from "redux-thunk";
 import {Dispatch} from "redux";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
 const {width, height} = Dimensions.get('window')
 
@@ -54,6 +55,22 @@ const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
     setModalShown(false)
   }
 
+  const offset = useSharedValue(0);
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withSpring(offset.value * 100) }],
+    };
+  });
+
+  useEffect(() => {
+    if(selectedWord?.meanings === addedMeanings.join('/')) {
+      offset.value = 1
+    } else {
+      offset.value = 0
+    }
+  })
+
   return (
     <Modal
       animationType="slide"
@@ -71,22 +88,30 @@ const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
         >
           <TouchableWithoutFeedback>
             {selectedWord && <View style={styles.modalView}>
-              <Text style={styles.title}>{selectedWord.title}</Text>
-              <AddMeaningForm meanings={selectedWord.meanings.split('/')}/>
-              <ScrollView
-                // directionalLockEnabled={true}
-                // contentContainerStyle={styles.centeredView}
-              >
-                {addedMeanings && addedMeanings.map((item, i, arr) => <MapTranslation {...{item, i, arr}} key={item}/>)}
-              </ScrollView>
-              <View style={styles.controlsWrapper}>
-                  <TouchableOpacity style={styles.closeBtn} onPress={closeModal}><Text style={[styles.closeBtnText, styles.btnText]}>ЗАКРЫТЬ</Text></TouchableOpacity>
-                  <TouchableOpacity onPress={() => onSaveChanges(addedMeanings, selectedWord ? selectedWord.id as number : 0,options as OptionsType)}><Text style={[styles.saveBtnText, styles.btnText]}>СОХРАНИТЬ</Text></TouchableOpacity>
-              </View>
+                <Text style={styles.title}>{selectedWord.title}</Text>
+                <AddMeaningForm meanings={selectedWord.meanings.split('/')}/>
+                <ScrollView
+                  // directionalLockEnabled={true}
+                  // contentContainerStyle={styles.centeredView}
+                >
+                  {addedMeanings && addedMeanings.map((item, i, arr) => <MapTranslation {...{item, i, arr}}
+                                                                                        key={item}/>)}
+                </ScrollView>
+                <View style={[styles.controlsWrapper]}>
+                  <Animated.View style={animatedStyles}>
+                      <TouchableOpacity
+                          style={styles.saveBtn}
+                          onPress={() => onSaveChanges(addedMeanings, selectedWord ? selectedWord.id as number : 0, options as OptionsType)}>
+                          <Text style={[styles.saveBtnText, styles.btnText]}>СОХРАНИТЬ</Text>
+                      </TouchableOpacity>
+                  </Animated.View>
+                    <TouchableOpacity onPress={closeModal}><Text
+                        style={[styles.closeBtnText, styles.btnText]}>ЗАКРЫТЬ</Text></TouchableOpacity>
+                </View>
             </View>}
           </TouchableWithoutFeedback>
         </View>
-      </TouchableOpacity >
+      </TouchableOpacity>
     </Modal>
   );
 };
@@ -125,7 +150,7 @@ const styles = StyleSheet.create({
   closeBtnText: {
     color: textSecondaryColor,
   },
-  closeBtn: {
+  saveBtn: {
     marginRight: 20
   },
   saveBtnText: {

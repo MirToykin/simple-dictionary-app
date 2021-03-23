@@ -38,36 +38,6 @@ const Set: FC<TProps> = ({setName}) => {
   const keyExtractor = (word: WordType) => word.id + '';
 
   let set = useSelector((state: AppStateType) => state.words[setName])
-  //todo заменить на set после тестов
-  const data = [
-    {
-      id: 264,
-      category: "current",
-      title: "to ponder",
-      meanings: "задуматься/размышлять/обдумывать",
-      user_id: 7,
-      created_at: "2020-11-17T09:47:36.000000Z",
-      updated_at: "2021-01-18T17:20:54.000000Z"
-    },
-    {
-      id: 644,
-      category: "current",
-      title: "to gain insight into",
-      meanings: "чтобы получить представление о/чтобы понять",
-      user_id: 7,
-      created_at: "2021-02-02T08:35:33.000000Z",
-      updated_at: "2021-02-05T05:05:02.000000Z"
-    },
-    {
-      id: 278,
-      category: "current",
-      title: "prominent",
-      meanings: "известный/видный/выдающийся",
-      user_id: 7,
-      created_at: "2020-11-18T10:13:11.000000Z",
-      updated_at: "2021-02-01T05:10:38.000000Z"
-    }
-  ] as Array<WordType>;
 
   const isFetching = useSelector((state: AppStateType) => state.app.isFetching)
   const uid = useSelector((state: AppStateType) => state.auth.id)
