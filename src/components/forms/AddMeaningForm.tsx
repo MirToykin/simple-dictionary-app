@@ -26,7 +26,7 @@ const AddMeaningForm: FC<TProps & InjectedFormProps<TFormData, TProps>> = ({mean
 
   const onIconPress = () => {
     if (!meaningValue) return
-    meaningValue = meaningValue.trim();
+    meaningValue = meaningValue.trim().toLowerCase();
     handleAddMeaning(addedMeanings, meaningValue, onAddMeaning, dispatch, 'AddMeaningForm', correctMeaningValue);
   }
 

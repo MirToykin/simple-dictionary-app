@@ -20,13 +20,11 @@ import {MapTranslation} from "../../assets/helpers";
 import AddMeaningForm from "../forms/AddMeaningForm";
 import {OptionsType} from "../../types/types";
 import {
-  DeleteFromAddedMeaningsActionType,
   editWord,
   setAddedMeanings,
   TEditWord
 } from "../../redux/actions/wordsActions";
 import {ThunkDispatch} from "redux-thunk";
-import {Dispatch} from "redux";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
 const {width, height} = Dimensions.get('window')
