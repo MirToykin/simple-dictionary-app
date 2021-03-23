@@ -40,8 +40,9 @@ export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr}) => {
   const dispatch: Dispatch<DeleteFromAddedMeaningsActionType> = useDispatch()
 
   return (
-    <View style={mapTranslationStyles.container}>
-      {arr.length > 1 && <TouchableOpacity
+    <TouchableOpacity style={mapTranslationStyles.container} activeOpacity={1}>
+      {arr.length > 1 &&
+      <TouchableOpacity
         style={mapTranslationStyles.delete}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
         onPress={() => dispatch(deleteFromAddedMeanings(item))}
@@ -51,11 +52,12 @@ export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr}) => {
           type='antdesign'
           color={errorColor}
         />
-      </TouchableOpacity>}
+      </TouchableOpacity>
+      }
       <View style={mapTranslationStyles.textContainer}>
         <Text style={mapTranslationStyles.text}>{item}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
