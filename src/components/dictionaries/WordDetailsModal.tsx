@@ -89,6 +89,7 @@ const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
                 <Text style={styles.title}>{selectedWord.title}</Text>
                 <AddMeaningForm meanings={selectedWord.meanings.split('/')}/>
                 <ScrollView
+                    keyboardShouldPersistTaps='always'
                   // directionalLockEnabled={true}
                   // contentContainerStyle={styles.centeredView}
                 >
