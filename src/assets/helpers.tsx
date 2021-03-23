@@ -1,7 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Icon} from "react-native-elements";
 import {errorColor, textPrimaryColor, textSecondaryColor} from "./styles";
-import React from "react";
+import React, {FC} from "react";
 import {Dispatch} from "redux";
 import {change, FormAction} from "redux-form";
 import {
@@ -31,12 +31,16 @@ const mapTranslationStyles = StyleSheet.create({
 })
 
 
-export type TMapTranslations = (item: string, i: number, arr: Array<string>) => Element
-export const mapTranslations: TMapTranslations = (item, i, arr) => {
+type TMapTranslationProps = {
+  item: string
+  i: number
+  arr: Array<string>
+}
+export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr}) => {
   const dispatch: Dispatch<DeleteFromAddedMeaningsActionType> = useDispatch()
 
   return (
-    <View style={mapTranslationStyles.container} key={item}>
+    <View style={mapTranslationStyles.container}>
       {arr.length > 1 && <TouchableOpacity
         style={mapTranslationStyles.delete}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}

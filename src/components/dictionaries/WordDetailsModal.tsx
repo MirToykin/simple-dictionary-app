@@ -16,7 +16,7 @@ import {
 } from "../../assets/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store/configureStore";
-import {mapTranslations} from "../../assets/helpers";
+import {MapTranslation} from "../../assets/helpers";
 import AddMeaningForm from "../forms/AddMeaningForm";
 import {OptionsType} from "../../types/types";
 import {
@@ -77,7 +77,7 @@ const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
                 // directionalLockEnabled={true}
                 // contentContainerStyle={styles.centeredView}
               >
-                {addedMeanings && addedMeanings.map(mapTranslations)}
+                {addedMeanings && addedMeanings.map((item, i, arr) => <MapTranslation {...{item, i, arr}} key={item}/>)}
               </ScrollView>
               <View style={styles.controlsWrapper}>
                   <TouchableOpacity style={styles.closeBtn} onPress={closeModal}><Text style={[styles.closeBtnText, styles.btnText]}>ЗАКРЫТЬ</Text></TouchableOpacity>
