@@ -57,6 +57,8 @@ const AddWordModal: FC<TProps> = ({modalShown, setModalShown, setName}) => {
   const closeModal = () => {
     dispatch(setAddedMeanings([]))
     setModalShown(false)
+    setError('')
+    setMessage('')
   }
 
   useEffect(() => {
