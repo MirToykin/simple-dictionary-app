@@ -35,13 +35,14 @@ type TMapTranslationProps = {
   item: string
   i: number
   arr: Array<string>
+  allowDeleteLast: boolean
 }
-export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr}) => {
+export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr, allowDeleteLast}) => {
   const dispatch: Dispatch<DeleteFromAddedMeaningsActionType> = useDispatch()
 
   return (
     <TouchableOpacity style={mapTranslationStyles.container} activeOpacity={1}>
-      {arr.length > 1 &&
+      {arr.length > 1 || allowDeleteLast &&
       <TouchableOpacity
         style={mapTranslationStyles.delete}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
@@ -62,7 +63,7 @@ export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr}) => {
 }
 
 type TDispatch = Dispatch<FormAction | PushToAddedMeaningsActionType>
-type TFormName = 'AddToSetForm' | 'AddMeaningForm' | 'TestForm'
+type TFormName = 'AddToSetForm' | 'AddMeaningForm' | 'TestForm' | 'AddWordForm'
 type TOnAddMeaning = (meaning: string, dispatch: TDispatch, formName: TFormName, repeatValue: boolean) => void
 export const onAddMeaning: TOnAddMeaning = (meaning, dispatch, formName, repeatValue) => {
   if (!meaning || repeatValue) return;

@@ -17,9 +17,17 @@ import {getSet, TGetSet} from "../../redux/actions/wordsActions";
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
 import index from "@react-native-community/masked-view";
-import {errorColor, primaryBackgroundColor, primaryColor, secondaryBackgroundColor} from "../../assets/styles";
+import {
+  errorColor,
+  primaryBackgroundColor,
+  primaryColor,
+  secondaryBackgroundColor,
+  textPrimaryColor, textSecondaryColor
+} from "../../assets/styles";
 import {Icon} from "react-native-elements";
 import WordDetailsModal from "./WordDetailsModal";
+import ActionButtons from "./ActionButtons";
+import AddWordModal from "./AddWordModal";
 
 type TProps = {
   setName: SetNameType
@@ -27,12 +35,13 @@ type TProps = {
 
 const Set: FC<TProps> = ({setName}) => {
   const thunkDispatchGetSet: ThunkDispatch<AppStateType, unknown, TGetSet> = useDispatch()
-  const [modalShown, setModalShown] = useState(false)
+  const [editModalShown, setEditModalShown] = useState(false)
+  const [addModalShown, setAddModalShown] = useState(false)
 
   const getWords = getSet(setName)
   const renderItem: ListRenderItem<WordType> = ({item}) => {
     return (
-      <WordItem word={item} setModalShown={setModalShown}/>
+      <WordItem word={item} setModalShown={setEditModalShown}/>
     )
   }
   const keyExtractor = (word: WordType) => word.id + '';
@@ -65,7 +74,9 @@ const Set: FC<TProps> = ({setName}) => {
         // initialNumToRender={20}
         // maxToRenderPerBatch={20}
       />
-      <WordDetailsModal setModalShown={setModalShown} modalShown={modalShown}/>
+      <WordDetailsModal setModalShown={setEditModalShown} modalShown={editModalShown}/>
+      <AddWordModal modalShown={addModalShown} setModalShown={setAddModalShown} setName={setName}/>
+      <ActionButtons setName={setName} setAddModalShown={setAddModalShown}/>
     </View>
   );
 };

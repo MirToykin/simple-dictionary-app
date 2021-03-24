@@ -9,44 +9,43 @@ import {InputIcon, renderAddMeaningInput} from "../../assets/formElems";
 
 
 type TFormData = {
-  meaning: string
+  title: string
 }
 
 type TProps = {
-  meanings: Array<string>
+  titleValue: string
+  meaningValue: string
 }
 
-const selector = formValueSelector('AddMeaningForm');
-
-const AddMeaningForm: FC<TProps & InjectedFormProps<TFormData, TProps>> = ({meanings}) => {
+const AddWordForm: FC<TProps & InjectedFormProps<TFormData, TProps>> = ({titleValue, meaningValue}) => {
   const addedMeanings = useSelector((state: AppStateType) => state.words.addedMeanings)
-  let meaningValue = useSelector((state: AppStateType) => selector(state, 'meaning'))
   const correctMeaningValue: boolean = !!(meaningValue && meaningValue.replace(/\s/g, '').length) // проверка не содержит ли строка только пробелы и переносы строк
   const dispatch = useDispatch();
 
-  const onIconPress = () => {
+  const onPlusPress = () => {
     if (!meaningValue) return
     meaningValue = meaningValue.trim().toLowerCase();
-    handleAddMeaning(addedMeanings, meaningValue, onAddMeaning, dispatch, 'AddMeaningForm', correctMeaningValue);
+    handleAddMeaning(addedMeanings, meaningValue, onAddMeaning, dispatch, 'AddWordForm', correctMeaningValue);
   }
-
-  useEffect(() => {
-    dispatch(setAddedMeanings(meanings));
-  }, []);
 
   return (
     <View>
       <Field
+        name="title"
+        component={renderAddMeaningInput}
+        placeholder={'Слово'}
+      />
+      <Field
         name="meaning"
         component={renderAddMeaningInput}
-        placeholder={'Добавить значение'}
-        rightIcon={<InputIcon onIconPress={onIconPress}/>}
+        placeholder={'Значение'}
+        rightIcon={<InputIcon onIconPress={onPlusPress}/>}
       />
     </View>
   );
 };
 
 export default reduxForm<TFormData, TProps>({
-  form: 'AddMeaningForm'
-})(AddMeaningForm)
+  form: 'AddWordForm'
+})(AddWordForm)
 

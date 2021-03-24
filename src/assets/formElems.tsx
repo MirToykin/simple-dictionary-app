@@ -21,7 +21,7 @@ export const renderAuthInput = ({secureTextEntry=false, leftIcon, placeholder, i
   />
 }
 
-const InputIcon = ({onIconPress}: {onIconPress: () => void | undefined}) => {
+export const InputIcon = ({onIconPress}: {onIconPress: () => void | undefined}) => {
   return (
     <TouchableOpacity
       onPress={onIconPress}
@@ -37,13 +37,12 @@ const InputIcon = ({onIconPress}: {onIconPress: () => void | undefined}) => {
 }
 
 // @ts-ignore
-export const renderAddMeaningInput = ({input: {onChange, ...restInput}, onIconPress, ...custom}) => {
+export const renderAddMeaningInput = ({input: {onChange, ...restInput}, ...custom}) => {
   return <Input
     inputStyle={{
       color: textPrimaryColor
     }}
     onChangeText={onChange}
-    rightIcon={<InputIcon onIconPress={onIconPress}/>}
     {...restInput}
     {...custom}
   />

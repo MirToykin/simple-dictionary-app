@@ -12,7 +12,8 @@ import {
   UPDATE_WORD_IN_STATE,
   SET_SET_SIZE,
   SHUFFLE_SET,
-  SET_SELECTED_WORD
+  SET_SELECTED_WORD,
+  RESET_ADD_WORD_FORM
 } from "../constants"
 import {SetAuthDataActionType, setAuthData} from "./authActions"
 import {OptionsType, SetNameType, WordType} from "../../types/types"
@@ -52,34 +53,38 @@ export type TAddToSetData = {
   user_id: number
 }
 export type TAddToSet = SetIsFetchingActionType | AddWordToStateActionType | SetAuthDataActionType
-export type AddToSetThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TAddToSet>
+export type AddToSetThunkType = ThunkAction<Promise<string|undefined>, AppStateType, unknown, TAddToSet>
 export type addToSetThunkCreatorType = (data: TAddToSetData, options: OptionsType) => AddToSetThunkType
 export type TAddToSetActions = SetIsFetchingActionType | AddSetActionType
 
-// export const addToSet = (set: SetNameType): addToSetThunkCreatorType => (data, options) => async (dispatch) => {
-//   dispatch(setIsFetching(true))
-//   const newData: any = {...data, category: set}
-//
-//   try {
-//     const word = await api.addToSet(newData, options)
-//     dispatch(addWordToState(set, word))
-//   } catch (e) {
-//     if (e.response && e.response.status === 401) {
-//       dispatch(setAuthData({
-//         id: null,
-//         name: null,
-//         email: null,
-//         token: null,
-//         isAuth: false,
-//         rememberMe: false
-//       }))
-//     }
-//     throw new SubmissionError({
-//       _error: e.response.data.message
-//     })
-//   }
-//   dispatch(setIsFetching(false))
-// }
+export const addToSet = (set: SetNameType): addToSetThunkCreatorType => (data, options) => async (dispatch) => {
+  dispatch(setIsFetching(true))
+  const newData: any = {...data, category: set}
+
+  try {
+    const word = await api.addToSet(newData, options)
+    dispatch(addWordToState(set, word))
+    dispatch(setIsFetching(false))
+    return new Promise<string>(resolve => {
+      resolve('Слово успешно добавлено')
+    })
+  } catch (e) {
+    if (e.response && e.response.status === 401) {
+      dispatch(setAuthData({
+        id: null,
+        name: null,
+        email: null,
+        token: null,
+        isAuth: false,
+        rememberMe: false
+      }))
+    } else {
+      let error = e.response && e.response.data.message;
+      throw new Error(error ? error : 'Не удалось сохранить слово')
+    }
+  }
+  dispatch(setIsFetching(false))
+}
 export type TEditWordData = {
   meanings?: string
   category?: SetNameType
@@ -292,5 +297,15 @@ export const setSelectedWord = (payload: WordType): TSetSelectedWordAction => {
   return {
     type: SET_SELECTED_WORD,
     payload
+  }
+}
+
+export type TResetAddWordFormAction = {
+  type: typeof RESET_ADD_WORD_FORM
+}
+
+export const resetAddWordForm = (): TResetAddWordFormAction => {
+  return {
+    type: RESET_ADD_WORD_FORM
   }
 }
