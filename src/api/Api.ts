@@ -59,14 +59,14 @@ class Api {
   editWord(wordId: number, data: TEditWordData, options: OptionsType) {
     return this.ajax.patch<TAddAndEditResponse>(`words/${wordId}`, data, options).then(res => res.data.word)
   }
-  //
-  // moveWords(data: {idsArr: Array<number>, setToMove: SetNameType}, options: OptionsType) {
-  //   return this.ajax.post<TMoveResponse>(`words/move`, data, options).then(res => res.data.updatedWords)
-  // }
-  //
-  // deleteWord(wordIds: Array<number>, options: OptionsType) {
-  //   return this.ajax.post<TDeleteResponse>(`words/delete`,{idsArr: wordIds}, options).then(res => res.data.deletedWords)
-  // }
+
+  moveWords(data: {idsArr: Array<number>, setToMove: SetNameType}, options: OptionsType) {
+    return this.ajax.post<TMoveResponse>(`words/move`, data, options).then(res => res.data.updatedWords)
+  }
+
+  deleteWord(wordIds: Array<number>, options: OptionsType) {
+    return this.ajax.post<TDeleteResponse>(`words/delete`,{idsArr: wordIds}, options).then(res => res.data.deletedWords)
+  }
 
 }
 

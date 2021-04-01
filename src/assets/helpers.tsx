@@ -42,7 +42,7 @@ export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr, allowDel
 
   return (
     <TouchableOpacity style={mapTranslationStyles.container} activeOpacity={1}>
-      {arr.length > 1 || allowDeleteLast &&
+      {(arr.length > 1 || allowDeleteLast) &&
       <TouchableOpacity
         style={mapTranslationStyles.delete}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}

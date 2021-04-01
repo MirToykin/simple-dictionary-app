@@ -11,9 +11,10 @@ import {setSelectedWord, TSetSelectedWordAction} from "../../redux/actions/words
 type TProps = {
   word: WordType,
   setModalShown: (shown: boolean) => void
+  setSelectedIDs: React.Dispatch<React.SetStateAction<number[]>>
 }
 
-const WordItem: FC<TProps> = ({word, setModalShown}) => {
+const WordItem: FC<TProps> = ({word, setModalShown, setSelectedIDs}) => {
   const [checked, setChecked] = useState(false)
 
   const dispatch: Dispatch<TSetSelectedWordAction> = useDispatch()
@@ -36,12 +37,25 @@ const WordItem: FC<TProps> = ({word, setModalShown}) => {
     setModalShown(true)
   }
 
+  const onCheckBoxPress = () => {
+    setChecked(checked => !checked)
+    if(!checked) {
+      setSelectedIDs((prev) => {
+        return [...prev, word.id]
+      })
+    } else {
+      setSelectedIDs((prev) => {
+        return prev.filter(item => item !== word.id)
+      })
+    }
+  }
+
   return (
     <View>
       <View style={styles.container}>
         <TouchableOpacity
           style={checkBoxStyle}
-          onPress={() => setChecked(!checked)}
+          onPress={onCheckBoxPress}
           hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
         >
           {checked && <Icon name={'check'} color={primaryColor} size={20}/>}

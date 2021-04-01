@@ -84,7 +84,7 @@ const AddWordModal: FC<TProps> = ({modalShown, setModalShown, setName}) => {
     })
   }
 
-  const offset = useSharedValue(0);
+  const offset = useSharedValue(1);
 
   const animatedStyles = useAnimatedStyle(() => {
     return {

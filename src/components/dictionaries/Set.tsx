@@ -13,7 +13,7 @@ import {
 import {OptionsType, SetNameType, WordType} from "../../types/types";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
-import {getSet, TGetSet} from "../../redux/actions/wordsActions";
+import {deleteWords, getSet, moveWords, TGetSet, TMoveAndDeleteWords} from "../../redux/actions/wordsActions";
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
 import index from "@react-native-community/masked-view";
@@ -35,13 +35,15 @@ type TProps = {
 
 const Set: FC<TProps> = ({setName}) => {
   const thunkDispatchGetSet: ThunkDispatch<AppStateType, unknown, TGetSet> = useDispatch()
+  const thunkDispatchMoveAndDelete: ThunkDispatch<AppStateType, unknown, TMoveAndDeleteWords> = useDispatch()
   const [editModalShown, setEditModalShown] = useState(false)
   const [addModalShown, setAddModalShown] = useState(false)
+  const [selectedIDs, setSelectedIDs] = useState<Array<number>>([])
 
   const getWords = getSet(setName)
   const renderItem: ListRenderItem<WordType> = ({item}) => {
     return (
-      <WordItem word={item} setModalShown={setEditModalShown}/>
+      <WordItem word={item} setModalShown={setEditModalShown} setSelectedIDs={setSelectedIDs}/>
     )
   }
   const keyExtractor = (word: WordType) => word.id + '';
@@ -61,6 +63,16 @@ const Set: FC<TProps> = ({setName}) => {
     fetchData()
   }, [setName])
 
+  const handleMove = (idsArr: Array<number>, setToMove: SetNameType, setToRemoveFrom: SetNameType, options: OptionsType): void => {
+    thunkDispatchMoveAndDelete(moveWords(idsArr, setToMove, setToRemoveFrom, options))
+    setSelectedIDs([]);
+  }
+
+  const handleDelete = (setToRemoveFrom: SetNameType, idsArray: Array<number>, options: OptionsType): void => {
+    thunkDispatchMoveAndDelete(deleteWords(setToRemoveFrom, idsArray, options))
+    setSelectedIDs([]);
+  }
+
   return (
     <View style={styles.container}>
       <FlatList<WordType>
@@ -76,7 +88,13 @@ const Set: FC<TProps> = ({setName}) => {
       />
       <WordDetailsModal setModalShown={setEditModalShown} modalShown={editModalShown}/>
       <AddWordModal modalShown={addModalShown} setModalShown={setAddModalShown} setName={setName}/>
-      <ActionButtons setName={setName} setAddModalShown={setAddModalShown}/>
+      <ActionButtons
+        setName={setName}
+        setAddModalShown={setAddModalShown}
+        selectedIDs={selectedIDs}
+        handleDelete={() => {
+        handleDelete(setName, selectedIDs, options as OptionsType)
+      }}/>
     </View>
   );
 };
