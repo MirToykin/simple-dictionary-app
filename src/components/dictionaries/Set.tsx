@@ -1,14 +1,9 @@
-import React, {FC, JSXElementConstructor, ReactHTMLElement, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,
-  Modal,
-  Pressable,
   StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  Dimensions, ScrollView, TouchableWithoutFeedback
+  View
 } from "react-native";
 import {OptionsType, SetNameType, WordType} from "../../types/types";
 import {ThunkDispatch} from "redux-thunk";
@@ -16,15 +11,9 @@ import {AppStateType} from "../../redux/store/configureStore";
 import {deleteWords, getSet, moveWords, TGetSet, TMoveAndDeleteWords} from "../../redux/actions/wordsActions";
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
-import index from "@react-native-community/masked-view";
 import {
-  errorColor,
-  primaryBackgroundColor,
-  primaryColor,
-  secondaryBackgroundColor,
-  textPrimaryColor, textSecondaryColor
+  primaryBackgroundColor
 } from "../../assets/styles";
-import {Icon} from "react-native-elements";
 import WordDetailsModal from "./WordDetailsModal";
 import ActionButtons from "./ActionButtons";
 import AddWordModal from "./AddWordModal";
@@ -39,6 +28,16 @@ const Set: FC<TProps> = ({setName}) => {
   const [editModalShown, setEditModalShown] = useState(false)
   const [addModalShown, setAddModalShown] = useState(false)
   const [selectedIDs, setSelectedIDs] = useState<Array<number>>([])
+
+  const routes: Array<SetNameType> = ['next', 'current', 'done']
+  const setTitles = {
+    next: 'На очереди',
+    current: 'На изучении',
+    done: 'Изучено'
+  }
+  const currentSetIndex = routes.indexOf(setName)
+  const nextSet = currentSetIndex === routes.length - 1 ? routes[0] : routes[currentSetIndex + 1]
+  const prevSet: SetNameType = currentSetIndex === 0 ? routes[routes.length - 1] : routes[currentSetIndex - 1]
 
   const getWords = getSet(setName)
   const renderItem: ListRenderItem<WordType> = ({item}) => {
@@ -59,12 +58,12 @@ const Set: FC<TProps> = ({setName}) => {
   }
 
   useEffect(() => {
-    // (async () => thunkDispatchGetSet(getWords(uid as number, options as OptionsType)))()
     fetchData()
+    setSelectedIDs([])
   }, [setName])
 
-  const handleMove = (idsArr: Array<number>, setToMove: SetNameType, setToRemoveFrom: SetNameType, options: OptionsType): void => {
-    thunkDispatchMoveAndDelete(moveWords(idsArr, setToMove, setToRemoveFrom, options))
+  const handleMove = (idsArr: Array<number>, setToMoveTo: SetNameType, setToRemoveFrom: SetNameType, options: OptionsType): void => {
+    thunkDispatchMoveAndDelete(moveWords(idsArr, setToMoveTo, setToRemoveFrom, options))
     setSelectedIDs([]);
   }
 
@@ -92,9 +91,18 @@ const Set: FC<TProps> = ({setName}) => {
         setName={setName}
         setAddModalShown={setAddModalShown}
         selectedIDs={selectedIDs}
+        nextSetName={setTitles[nextSet]}
+        prevSetName={setTitles[prevSet]}
         handleDelete={() => {
-        handleDelete(setName, selectedIDs, options as OptionsType)
-      }}/>
+          handleDelete(setName, selectedIDs, options as OptionsType)
+        }}
+        handleMoveForward={() => {
+          handleMove(selectedIDs, nextSet, setName, options as OptionsType)
+        }}
+        handleMoveBack={() => {
+          handleMove(selectedIDs, prevSet, setName, options as OptionsType)
+        }}
+      />
     </View>
   );
 };

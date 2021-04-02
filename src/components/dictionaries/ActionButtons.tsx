@@ -2,17 +2,25 @@ import React, {FC} from 'react';
 
 import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
 import {Icon} from "react-native-elements";
-import {errorColor, primaryColor, textPrimaryColor, textSecondaryColor} from "../../assets/styles";
-import {OptionsType, SetNameType} from "../../types/types";
+import {errorColor, textPrimaryColor,} from "../../assets/styles";
+import {SetNameType} from "../../types/types";
 
 type TProps = {
   setName: SetNameType
   setAddModalShown: (shown: boolean) => void
   handleDelete: () => void
   selectedIDs: Array<number>
+  handleMoveForward: () => void
+  handleMoveBack: () => void
+  nextSetName: string
+  prevSetName: string
 }
 
-const ActionButtons: FC<TProps> = ({setName, setAddModalShown, handleDelete, selectedIDs}) => {
+const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
+                                     handleDelete, selectedIDs,
+                                     handleMoveBack, handleMoveForward,
+                                     nextSetName, prevSetName
+                                   }) => {
   type TButton = {
     name: string,
     type: string,
@@ -23,6 +31,23 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown, handleDelete, sel
     onPress: () => void
     disabled?: boolean
   }
+
+  const showAlert = (title: string, message: string, confirmBtnText: string, confirmBtnAction: ()=>void) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {
+          text: "Отмена",
+          style: "cancel"
+        },
+        { text: confirmBtnText,
+          onPress: confirmBtnAction,
+          style: "default" }
+      ]
+    )
+  }
+
   const buttons: Array<TButton> = [
     {
       name: 'plus',
@@ -48,21 +73,27 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown, handleDelete, sel
       style: styles.deleteBtn,
       color: errorColor,
       size: 30,
-      condition: setName === 'current',
-      onPress:  () => Alert.alert(
-        "Удаление",
-        'Удалить отмеченные слова из набора?',
-        [
-          {
-            text: "Отмена",
-            style: "cancel"
-          },
-          { text: "Удалить",
-            onPress: handleDelete,
-            style: "default" }
-        ]
-      ),
+      condition: true,
+      onPress:  () => showAlert('Удаление',`Удалить отмеченные слова (${selectedIDs.length}) из набора?`, 'Удалить', handleDelete),
       disabled: !selectedIDs.length
+    },
+    {
+      name: 'arrowright',
+      type: 'antdesign',
+      style: styles.moveForward,
+      color: textPrimaryColor,
+      size: 30,
+      condition: true,
+      onPress: () => showAlert('Перемещение', `Переместить отмеченные слова (${selectedIDs.length}) в набор "${nextSetName}"`, 'Переместить', handleMoveForward)
+    },
+    {
+      name: 'arrowleft',
+      type: 'antdesign',
+      style: styles.moveBack,
+      color: textPrimaryColor,
+      size: 30,
+      condition: true,
+      onPress: () => showAlert('Перемещение', `Переместить отмеченные слова (${selectedIDs.length}) в набор "${prevSetName}"`, 'Переместить', handleMoveBack)
     }
   ]
 
@@ -102,19 +133,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   addBtn: {
-    // backgroundColor: primaryColor,
-    backgroundColor: 'transparent',
     bottom: 65
   },
   shuffleBtn: {
     bottom: 10,
-    // backgroundColor: textSecondaryColor
-    backgroundColor: 'transparent',
   },
   deleteBtn: {
-    // backgroundColor: errorColor,
-    backgroundColor: 'transparent',
     bottom: 120
+  },
+  moveForward: {
+    bottom: 175
+  },
+  moveBack: {
+    bottom: 230
   }
 })
 
