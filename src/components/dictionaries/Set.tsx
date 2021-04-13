@@ -1,11 +1,13 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   ListRenderItem,
   StyleSheet,
-  View
+  View,
+  Animated
 } from "react-native";
-import {OptionsType, SetNameType, WordType} from "../../types/types";
+import {OptionsType, SetNameType, TSliderSpacer, WordType} from "../../types/types";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {deleteWords, getSet, moveWords, TGetSet, TMoveAndDeleteWords} from "../../redux/actions/wordsActions";
@@ -17,10 +19,13 @@ import {
 import WordDetailsModal from "./WordDetailsModal";
 import ActionButtons from "./ActionButtons";
 import AddWordModal from "./AddWordModal";
+import WordItemCard from "./WordItemCard";
 
 type TProps = {
   setName: SetNameType
 }
+
+const {width, height} = Dimensions.get('window')
 
 const Set: FC<TProps> = ({setName}) => {
   const thunkDispatchGetSet: ThunkDispatch<AppStateType, unknown, TGetSet> = useDispatch()
@@ -28,6 +33,13 @@ const Set: FC<TProps> = ({setName}) => {
   const [editModalShown, setEditModalShown] = useState(false)
   const [addModalShown, setAddModalShown] = useState(false)
   const [selectedIDs, setSelectedIDs] = useState<Array<number>>([])
+  const [sliderMode, setSliderMode] = useState(true)
+
+  const slideWidth = width * 0.9
+  const slideHeight = height * 0.75
+
+  const isSlider = sliderMode && setName === 'current';
+  const scrollX = useRef(new Animated.Value(0)).current
 
   const routes: Array<SetNameType> = ['next', 'current', 'done']
   const setTitles = {
@@ -40,14 +52,39 @@ const Set: FC<TProps> = ({setName}) => {
   const prevSet: SetNameType = currentSetIndex === 0 ? routes[routes.length - 1] : routes[currentSetIndex - 1]
 
   const getWords = getSet(setName)
-  const renderItem: ListRenderItem<WordType> = ({item}) => {
-    return (
-      <WordItem word={item} setModalShown={setEditModalShown} setSelectedIDs={setSelectedIDs}/>
+  const renderItem: ListRenderItem<WordType | TSliderSpacer> = ({item, index}) => {
+
+    // let translateY: Animated.AnimatedInterpolation
+    // if (isSlider) {
+      const inputRange = [
+        (index - 2) * slideWidth,
+        (index - 1) * slideWidth,
+        index * slideWidth,
+      ]
+
+      let translateY = scrollX.interpolate({
+        inputRange,
+        outputRange: [0, -30, 0]
+      })
+    // }
+    return (isSlider ?
+        <WordItemCard word={item}
+                      setModalShown={setEditModalShown}
+                      setSelectedIDs={setSelectedIDs}
+                      translateY={translateY}
+                      slideWidth={slideWidth}
+                      slideHeight={slideHeight}
+                      width={width}
+        /> :
+        <WordItem word={item as WordType} setModalShown={setEditModalShown} setSelectedIDs={setSelectedIDs}/>
     )
   }
-  const keyExtractor = (word: WordType) => word.id + '';
+  const keyExtractor = (word: WordType | TSliderSpacer) => word.id + '';
 
   let set = useSelector((state: AppStateType) => state.words[setName])
+  let sliderSet: Array<WordType | TSliderSpacer> = []
+
+  if (isSlider) sliderSet = [{key: 'left-spacer', id: -1}, ...set, {key: 'right-spacer', id: 0}]
 
   const isFetching = useSelector((state: AppStateType) => state.app.isFetching)
   const uid = useSelector((state: AppStateType) => state.auth.id)
@@ -74,20 +111,27 @@ const Set: FC<TProps> = ({setName}) => {
 
   return (
     <View style={styles.container}>
-      <FlatList<WordType>
-        data={set}
+      <Animated.FlatList<WordType | TSliderSpacer>
+        data={ isSlider ? sliderSet : set}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         refreshing={isFetching}
+        horizontal={isSlider}
         onRefresh={fetchData}
-        // onEndReached={this.onScrollToEnd}
         onEndReachedThreshold={0.2}
-        // initialNumToRender={20}
-        // maxToRenderPerBatch={20}
+        snapToInterval={isSlider ? slideWidth : undefined}
+        decelerationRate={isSlider ? 0 : undefined}
+        bounces={false}
+        onScroll={isSlider ? Animated.event(
+          [{nativeEvent: {contentOffset: {x: scrollX}}}],
+          {useNativeDriver: true}
+        ) : undefined}
+        scrollEventThrottle={isSlider ? 16 : undefined}
+        contentContainerStyle={isSlider? styles.flatListContainer : undefined}
       />
       <WordDetailsModal setModalShown={setEditModalShown} modalShown={editModalShown}/>
       <AddWordModal modalShown={addModalShown} setModalShown={setAddModalShown} setName={setName}/>
-      <ActionButtons
+      {!sliderMode || true && <ActionButtons
         setName={setName}
         setAddModalShown={setAddModalShown}
         selectedIDs={selectedIDs}
@@ -102,7 +146,7 @@ const Set: FC<TProps> = ({setName}) => {
         handleMoveBack={() => {
           handleMove(selectedIDs, prevSet, setName, options as OptionsType)
         }}
-      />
+      />}
     </View>
   );
 };
@@ -112,6 +156,10 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: primaryBackgroundColor,
     flex: 1
+  },
+  flatListContainer: {
+    alignItems: 'flex-end',
+    paddingBottom: 30
   }
 })
 

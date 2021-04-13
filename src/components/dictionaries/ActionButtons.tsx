@@ -73,14 +73,14 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       condition: setName !== 'done',
       onPress: () => setAddModalShown(true)
     },
-    {
-      name: 'shuffle',
-      type: 'ionicon',
-      color: textPrimaryColor,
-      size: 30,
-      condition: setName === 'current',
-      onPress: () => {}
-    },
+    // {
+    //   name: 'shuffle',
+    //   type: 'ionicon',
+    //   color: textPrimaryColor,
+    //   size: 30,
+    //   condition: setName === 'current',
+    //   onPress: () => {}
+    // },
     {
       name: 'arrowright',
       type: 'antdesign',

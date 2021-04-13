@@ -35,7 +35,7 @@ type TMapTranslationProps = {
   item: string
   i: number
   arr: Array<string>
-  allowDeleteLast: boolean
+  allowDeleteLast?: boolean
 }
 export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr, allowDeleteLast}) => {
   const dispatch: Dispatch<DeleteFromAddedMeaningsActionType> = useDispatch()
