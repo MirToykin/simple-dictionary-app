@@ -33,7 +33,7 @@ const Set: FC<TProps> = ({setName}) => {
   const [editModalShown, setEditModalShown] = useState(false)
   const [addModalShown, setAddModalShown] = useState(false)
   const [selectedIDs, setSelectedIDs] = useState<Array<number>>([])
-  const [sliderMode, setSliderMode] = useState(true)
+  const [sliderMode, setSliderMode] = useState(false)
 
   const slideWidth = width * 0.9
   const slideHeight = height * 0.75
@@ -52,10 +52,14 @@ const Set: FC<TProps> = ({setName}) => {
   const prevSet: SetNameType = currentSetIndex === 0 ? routes[routes.length - 1] : routes[currentSetIndex - 1]
 
   const getWords = getSet(setName)
-  const renderItem: ListRenderItem<WordType | TSliderSpacer> = ({item, index}) => {
 
-    // let translateY: Animated.AnimatedInterpolation
-    // if (isSlider) {
+  const renderItem: ListRenderItem<WordType> = ({item}) => {
+    return (
+      <WordItem word={item} setModalShown={setEditModalShown} setSelectedIDs={setSelectedIDs}/>
+    )
+  }
+
+  const renderItemCard: ListRenderItem<WordType | TSliderSpacer> = ({item, index}) => {
       const inputRange = [
         (index - 2) * slideWidth,
         (index - 1) * slideWidth,
@@ -66,8 +70,7 @@ const Set: FC<TProps> = ({setName}) => {
         inputRange,
         outputRange: [0, -30, 0]
       })
-    // }
-    return (isSlider ?
+    return (
         <WordItemCard word={item}
                       setModalShown={setEditModalShown}
                       setSelectedIDs={setSelectedIDs}
@@ -75,8 +78,7 @@ const Set: FC<TProps> = ({setName}) => {
                       slideWidth={slideWidth}
                       slideHeight={slideHeight}
                       width={width}
-        /> :
-        <WordItem word={item as WordType} setModalShown={setEditModalShown} setSelectedIDs={setSelectedIDs}/>
+        />
     )
   }
   const keyExtractor = (word: WordType | TSliderSpacer) => word.id + '';
@@ -111,32 +113,43 @@ const Set: FC<TProps> = ({setName}) => {
 
   return (
     <View style={styles.container}>
-      <Animated.FlatList<WordType | TSliderSpacer>
-        data={ isSlider ? sliderSet : set}
-        renderItem={renderItem}
+      {isSlider ? <Animated.FlatList<WordType | TSliderSpacer>
+        data={sliderSet}
+        renderItem={renderItemCard}
         keyExtractor={keyExtractor}
         refreshing={isFetching}
         horizontal={isSlider}
         onRefresh={fetchData}
         onEndReachedThreshold={0.2}
-        snapToInterval={isSlider ? slideWidth : undefined}
-        decelerationRate={isSlider ? 0 : undefined}
+        snapToInterval={slideWidth}
+        decelerationRate={0}
         bounces={false}
-        onScroll={isSlider ? Animated.event(
+        onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
           {useNativeDriver: true}
-        ) : undefined}
-        scrollEventThrottle={isSlider ? 16 : undefined}
-        contentContainerStyle={isSlider? styles.flatListContainer : undefined}
-      />
+        )}
+        scrollEventThrottle={16}
+        contentContainerStyle={styles.flatListContainer}
+      /> :
+        <FlatList<WordType>
+          data={set}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          refreshing={isFetching}
+          onRefresh={fetchData}
+          onEndReachedThreshold={0.2}
+        />}
+
       <WordDetailsModal setModalShown={setEditModalShown} modalShown={editModalShown}/>
       <AddWordModal modalShown={addModalShown} setModalShown={setAddModalShown} setName={setName}/>
-      {!sliderMode || true && <ActionButtons
+      <ActionButtons
         setName={setName}
         setAddModalShown={setAddModalShown}
         selectedIDs={selectedIDs}
         nextSetName={setTitles[nextSet]}
         prevSetName={setTitles[prevSet]}
+        setSliderMode={setSliderMode}
+        sliderMode={sliderMode}
         handleDelete={() => {
           handleDelete(setName, selectedIDs, options as OptionsType)
         }}
@@ -146,7 +159,7 @@ const Set: FC<TProps> = ({setName}) => {
         handleMoveBack={() => {
           handleMove(selectedIDs, prevSet, setName, options as OptionsType)
         }}
-      />}
+      />
     </View>
   );
 };

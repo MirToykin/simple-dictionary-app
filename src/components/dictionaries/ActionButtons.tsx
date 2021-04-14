@@ -15,12 +15,15 @@ type TProps = {
   handleMoveBack: () => void
   nextSetName: string
   prevSetName: string
+  setSliderMode: (mode: boolean) => void
+  sliderMode: boolean
 }
 
 const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
                                      handleDelete, selectedIDs,
                                      handleMoveBack, handleMoveForward,
-                                     nextSetName, prevSetName
+                                     nextSetName, prevSetName,
+                                     setSliderMode, sliderMode
                                    }) => {
   type TButton = {
     name: string,
@@ -73,14 +76,14 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       condition: setName !== 'done',
       onPress: () => setAddModalShown(true)
     },
-    // {
-    //   name: 'shuffle',
-    //   type: 'ionicon',
-    //   color: textPrimaryColor,
-    //   size: 30,
-    //   condition: setName === 'current',
-    //   onPress: () => {}
-    // },
+    {
+      name: sliderMode ? 'format-list-bulleted' : 'my-library-books',
+      type: 'material',
+      color: textPrimaryColor,
+      size: 30,
+      condition: setName === 'current',
+      onPress: () => setSliderMode(!sliderMode)
+    },
     {
       name: 'arrowright',
       type: 'antdesign',
