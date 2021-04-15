@@ -4,7 +4,7 @@ import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Icon} from "react-native-elements";
 import {errorColor, secondaryColor, successColor, textPrimaryColor,} from "../../assets/styles";
 import {SetNameType} from "../../types/types";
-import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import Animated, {useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming} from "react-native-reanimated";
 
 type TProps = {
   setName: SetNameType
@@ -33,15 +33,16 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
     condition: boolean
     onPress: () => void
     disabled?: boolean
+    // offset?:  Animated.SharedValue<number>
+    animationOptions?: any
+    position: {
+      bottom: number
+      right: number
+    },
+    constant: boolean
   }
 
   const offset = useSharedValue(1);
-
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      bottom: withSpring(offset.value * -165)
-    };
-  });
 
   useEffect(() => {
     if (selectedIDs.length) {
@@ -74,7 +75,12 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       color: successColor,
       size: 35,
       condition: setName !== 'done',
-      onPress: () => setAddModalShown(true)
+      onPress: () => setAddModalShown(true),
+      position: {
+        bottom: 10,
+        right: 0
+      },
+      constant: true
     },
     {
       name: sliderMode ? 'format-list-bulleted' : 'my-library-books',
@@ -82,7 +88,12 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       color: textPrimaryColor,
       size: 30,
       condition: setName === 'current',
-      onPress: () => setSliderMode(!sliderMode)
+      onPress: () => setSliderMode(!sliderMode),
+      position: {
+        bottom: 65,
+        right: 0
+      },
+      constant: true
     },
     {
       name: 'arrowright',
@@ -91,7 +102,15 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       size: 30,
       condition: true,
       onPress: () => showAlert('Перемещение', `Переместить отмеченные слова (${selectedIDs.length}) в набор "${nextSetName}"`, 'Переместить', handleMoveForward),
-      disabled: !selectedIDs.length
+      disabled: !selectedIDs.length,
+      animationOptions: {
+        delay: !selectedIDs.length ? 150 : 50
+      },
+      position: {
+        bottom: 120,
+        right: 0
+      },
+      constant: false
     },
     {
       name: 'arrowleft',
@@ -100,7 +119,15 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       size: 30,
       condition: true,
       onPress: () => showAlert('Перемещение', `Переместить отмеченные слова (${selectedIDs.length}) в набор "${prevSetName}"`, 'Переместить', handleMoveBack),
-      disabled: !selectedIDs.length
+      disabled: !selectedIDs.length,
+      animationOptions: {
+        delay: 100
+      },
+      position: {
+        bottom: 175,
+        right: 0
+      },
+      constant: false
     },
     {
       name: 'delete',
@@ -109,49 +136,75 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       size: 30,
       condition: true,
       onPress:  () => showAlert('Удаление',`Удалить отмеченные слова (${selectedIDs.length}) из набора?`, 'Удалить', handleDelete),
-      disabled: !selectedIDs.length
+      disabled: !selectedIDs.length,
+      animationOptions: {
+        delay: !selectedIDs.length ? 50 : 150
+      },
+      position: {
+        bottom: 230,
+        right: 0
+      },
+      constant: false
     }
   ]
 
   const renderButton = (item: TButton) => {
+    const {bottom, right} = item.position
+    // const offset = useSharedValue(0);
+
+    const animatedStyles = (useAnimatedStyle(() => {
+      const delay = item.animationOptions?.delay ? item.animationOptions?.delay : 0
+      return {
+        right: withDelay(delay, withTiming(offset.value * -50))
+      };
+    }));
     if (item.condition)
       return (
-        <TouchableOpacity
-          style={[styles.actionBtn]}
-          onPress={item.onPress}
-          key={item.name}
-          disabled={item.disabled}
-        >
-          <Icon
-            name={item.name}
-            type={item.type}
-            color={item.color}
-            size={item.size}
-          />
-        </TouchableOpacity>
+        <Animated.View key={item.name} style={[styles.btnContainer, {bottom, right},!item.constant ? animatedStyles : {}]}>
+          <TouchableOpacity
+            style={[styles.actionBtn]}
+            onPress={item.onPress}
+            disabled={item.disabled}
+          >
+            <Icon
+              name={item.name}
+              type={item.type}
+              color={item.color}
+              size={item.size}
+            />
+          </TouchableOpacity>
+        </Animated.View>
       )
   }
 
   return (
-    <Animated.View style={[styles.buttonsContainer, animatedStyles]}>
-      {buttons.map(renderButton)}
-    </Animated.View>
+    // <Animated.View style={[styles.buttonsContainer, animatedStyles]}>
+    //   {buttons.map(renderButton)}
+    // </Animated.View>
+  <>
+    {buttons.map(renderButton)}
+  </>
   );
 };
 
 const styles = StyleSheet.create({
   buttonsContainer: {
-    borderColor: 'red',
-    position: "absolute",
-    bottom: -165,
-    right: 10
+    // position: "absolute",
+    // bottom: -165,
+    // right: 10
   },
   actionBtn: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
     justifyContent: "space-evenly",
-    marginBottom: 10
+    // marginBottom: 10,
+  },
+  btnContainer: {
+    position: "absolute",
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
   }
 })
 
