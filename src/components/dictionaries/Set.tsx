@@ -138,6 +138,7 @@ const Set: FC<TProps> = ({setName}) => {
           refreshing={isFetching}
           onRefresh={fetchData}
           onEndReachedThreshold={0.2}
+          initialNumToRender={20}
         />}
 
       <WordDetailsModal setModalShown={setEditModalShown} modalShown={editModalShown}/>
@@ -150,6 +151,7 @@ const Set: FC<TProps> = ({setName}) => {
         prevSetName={setTitles[prevSet]}
         setSliderMode={setSliderMode}
         sliderMode={sliderMode}
+        screenWidth={width}
         handleDelete={() => {
           handleDelete(setName, selectedIDs, options as OptionsType)
         }}
