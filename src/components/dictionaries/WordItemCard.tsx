@@ -1,45 +1,64 @@
-import React, {FC, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View, Dimensions, Animated} from "react-native";
+import React, {FC, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View, Dimensions, Animated, ScrollView} from "react-native";
 import {Icon, Text} from 'react-native-elements';
-import {isTSliderSpacer, TSliderSpacer, WordType} from "../../types/types";
-import {primaryBackgroundColor, primaryColor, secondaryBackgroundColor, textPrimaryColor} from "../../assets/styles";
+import {isTSliderSpacer, OptionsType, SetNameType, TSliderSpacer, WordType} from "../../types/types";
+import {
+  errorColor,
+  primaryBackgroundColor,
+  primaryColor,
+  secondaryBackgroundColor,
+  secondaryColor,
+  textPrimaryColor, textSecondaryColor
+} from "../../assets/styles";
 import {Dispatch} from "redux";
-import {useDispatch} from "react-redux";
-import {setSelectedWord, TSetSelectedWordAction} from "../../redux/actions/wordsActions";
+import {useDispatch, useSelector} from "react-redux";
+import {
+  deleteWords,
+  moveWords,
+  setSelectedWord,
+  TMoveAndDeleteWords,
+  TSetSelectedWordAction
+} from "../../redux/actions/wordsActions";
+import {ThunkDispatch} from "redux-thunk";
+import {AppStateType} from "../../redux/store/configureStore";
+import {showAlert} from "../../assets/helpers";
 
 type TProps = {
   word: WordType | TSliderSpacer,
   setModalShown: (shown: boolean) => void
   setSelectedIDs: React.Dispatch<React.SetStateAction<number[]>>
-  translateY: Animated.AnimatedInterpolation
   slideWidth: number
-  slideHeight: number
   width: number
+  index: number
+  setDeletedIndex: any
+  scrollToIndex: any
 }
 
-const WordItemCard: FC<TProps> = ({word, slideWidth, slideHeight, translateY, width}) => {
+const WordItemCard: FC<TProps> = ({word, slideWidth,width}) => {
 
   if (isTSliderSpacer(word)) {
     return <View style={{width: (width - slideWidth) / 2}}/>
   }
+
+  const meanings = word.meanings.split('/')
   return (
-    <Animated.View style={{
-      transform: [{translateY}],
+    <View style={{
       width: slideWidth,
-      height: slideHeight,
       padding: 10
     }}>
       <View style={styles.container}>
-        <TouchableOpacity
+        <View
           style={styles.textWrapper}
-          onPress={undefined}
         >
-          <Text style={styles.name}>
+          <Text style={styles.title}>
             {word.title}
           </Text>
-        </TouchableOpacity>
+        </View>
+        <ScrollView contentContainerStyle={styles.meaningsContainer} style={styles.scrollView}>
+          {meanings.map((meaning) => <Text style={styles.meaning} key={meaning}>{meaning}</Text>)}
+        </ScrollView>
       </View>
-    </Animated.View>
+    </View>
   );
 };
 
@@ -47,20 +66,16 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     height: '100%',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    // paddingHorizontal: 20,
+    // paddingVertical: 10,
+    padding: 25,
     backgroundColor: secondaryBackgroundColor,
-    // marginHorizontal: 10,
-    borderRadius: 25
+    borderRadius: 25,
   },
   textWrapper: {
     flex: 1,
-    justifyContent: 'flex-start',
-    paddingLeft: 15
-  },
-  name: {
-    fontSize: 18,
-    color: textPrimaryColor,
+    justifyContent: 'center',
+    // paddingLeft: 15
   },
   email: {
     marginTop: 10,
@@ -78,6 +93,33 @@ const styles = StyleSheet.create({
   },
   body: {
     paddingLeft: 50
+  },
+  title: {
+    fontSize: 24,
+    color: primaryColor,
+    textAlign: 'center',
+    marginBottom: 50,
+    marginTop: 30
+  },
+  meaning: {
+    color: textPrimaryColor,
+    // paddingHorizontal: 10,
+    fontSize: 20,
+    marginBottom: 20
+  },
+  meaningsContainer: {
+    alignItems: 'center'
+  },
+  actionButton: {
+    color: textSecondaryColor,
+    textAlign: 'center',
+    fontSize: 16
+  },
+  deleteButton: {
+    color: errorColor
+  },
+  scrollView: {
+    width: '100%'
   }
 });
 

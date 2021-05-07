@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Icon} from "react-native-elements";
 import {errorColor, textPrimaryColor, textSecondaryColor} from "./styles";
 import React, {FC} from "react";
@@ -74,4 +74,20 @@ export const onAddMeaning: TOnAddMeaning = (meaning, dispatch, formName, repeatV
 export const handleAddMeaning = (addedMeanings: Array<string>, meaningValue: string, onAddMeaning: TOnAddMeaning, dispatch: TDispatch, formName: TFormName, correctMeaningValue: boolean) => {
   const repeat = addedMeanings.includes(meaningValue);
   correctMeaningValue && onAddMeaning(meaningValue, dispatch, formName, repeat);
+}
+
+export const showAlert = (title: string, message: string, confirmBtnText: string, confirmBtnAction: ()=>void) => {
+  Alert.alert(
+    title,
+    message,
+    [
+      {
+        text: "Отмена",
+        style: "cancel"
+      },
+      { text: confirmBtnText,
+        onPress: confirmBtnAction,
+        style: "default" }
+    ]
+  )
 }
