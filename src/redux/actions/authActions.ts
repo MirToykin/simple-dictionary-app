@@ -100,7 +100,7 @@ export const logout = (options: any): AuthThunkType => async (dispatch) => {
   try {
     await api.logout(options);
   } catch (e) {
-    console.log(e.response.data.message);
+
   }
 
   dispatch(setAuthData({

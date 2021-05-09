@@ -25,7 +25,7 @@ import {
   TEditWord
 } from "../../redux/actions/wordsActions";
 import {ThunkDispatch} from "redux-thunk";
-import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {Dispatch} from "redux";
 
 const {width, height} = Dimensions.get('window')
@@ -59,7 +59,7 @@ const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      transform: [{translateY: withSpring(offset.value * 100)}],
+      transform: [{translateY: withTiming(offset.value * 100)}],
     };
   });
 

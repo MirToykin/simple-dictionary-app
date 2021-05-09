@@ -31,7 +31,7 @@ type TProps = {
 // const {width, height} = Dimensions.get('window')
 
 const Set: FC<TProps> = ({setName}) => {
-  // console.log('set rendered')
+  console.log('set rendered')
   const thunkDispatchGetSet: ThunkDispatch<AppStateType, unknown, TGetSet> = useDispatch()
   const thunkDispatchMoveAndDelete: ThunkDispatch<AppStateType, unknown, TMoveAndDeleteWords> = useDispatch()
   const [editModalShown, setEditModalShown] = useState(false)
@@ -68,7 +68,6 @@ const Set: FC<TProps> = ({setName}) => {
   }
 
   const scrollToIndex = () => {
-    console.log('scroll to')
     flatListRef.scrollToIndex({index: 5, animated: true})
   }
 
@@ -110,19 +109,10 @@ const Set: FC<TProps> = ({setName}) => {
   }
 
   const onViewRef = useRef((viewableItems: any)=> {
-    setShownSlideWordIndex(viewableItems.viewableItems[1].index)
-    setShownSlideWord(viewableItems.viewableItems[1].item)
-    console.log(viewableItems.viewableItems[1].item)
+    const visibleCard = viewableItems.viewableItems[1]
+    visibleCard && setShownSlideWordIndex(visibleCard.index)
+    visibleCard && setShownSlideWord(visibleCard.item)
   }).current
-
-  const offset = useSharedValue(-CARD_BUTTONS_HEIGHT)
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      top: withTiming(offset.value * +!isSlider)
-    };
-  });
-
-  console.log(shownSlideWord)
 
   return (
     <View style={styles.container}>
@@ -174,15 +164,13 @@ const Set: FC<TProps> = ({setName}) => {
           handleMove(selectedIDs, prevSet, setName, options as OptionsType)
         }}
       />
-      <Animated.View style={[styles.cardButtonsContainer, animatedStyle, {height: CARD_BUTTONS_HEIGHT}]}>
-        <CardActionButtons
-          setModalShown={setEditModalShown}
-          isSlider
-          shownSlideWord={shownSlideWord}
-          shownSlideWordIndex={shownSlideWordIndex}
-          flatListRef={flatListRef}
-        />
-      </Animated.View>
+      <CardActionButtons
+        setModalShown={setEditModalShown}
+        isSlider={isSlider}
+        shownSlideWord={shownSlideWord}
+        shownSlideWordIndex={shownSlideWordIndex}
+        flatListRef={flatListRef}
+      />
       <WordDetailsModal setModalShown={setEditModalShown} modalShown={editModalShown}/>
       <AddWordModal modalShown={addModalShown} setModalShown={setAddModalShown} setName={setName}/>
     </View>
@@ -200,6 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: "absolute",
     alignItems: "center",
+    top: 0,
     right: 0,
     left: 0
   },

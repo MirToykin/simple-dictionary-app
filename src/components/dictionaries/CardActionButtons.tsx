@@ -17,7 +17,7 @@ import {
   TSetSelectedWordAction
 } from "../../redux/actions/wordsActions";
 import {Dispatch} from "redux";
-import {ACTION_BUTTON_SIZE} from "../../constants";
+import {ACTION_BUTTON_SIZE, CARD_BUTTONS_HEIGHT} from "../../constants";
 
 
 type TSetData = {
@@ -39,6 +39,10 @@ const CardActionButtons: FC<TProps> = ({
                                          setModalShown, isSlider, shownSlideWord,
                                          shownSlideWordIndex, flatListRef
 }) => {
+  // useEffect(() => {
+  //   shownSlideWord && dispatch(setSelectedWord(shownSlideWord))
+  // }, [shownSlideWord])
+
   const options = useSelector((state: AppStateType) => state.auth.options)
   const thunkDispatchMoveAndDelete: ThunkDispatch<AppStateType, unknown, TMoveAndDeleteWords> = useDispatch()
   const dispatch: Dispatch<TSetSelectedWordAction> = useDispatch()
@@ -49,15 +53,19 @@ const CardActionButtons: FC<TProps> = ({
   const handleMoveToDone = () => handleMove('done')
   const handleMoveToNext = () => handleMove('next')
   const handleChangeMeanings = () => {
-    // dispatch(setSelectedWord(word))
-    setModalShown(true)
+    if (shownSlideWord !== null) {
+      dispatch(setSelectedWord(shownSlideWord))
+      setModalShown(true)
+    }
+
   }
   const handleDelete = () => {
-    thunkDispatchMoveAndDelete(deleteWords('current', [shownSlideWord ? shownSlideWord.id : 0], options as OptionsType)).catch(() => {})
+    thunkDispatchMoveAndDelete(deleteWords('current', [shownSlideWord ? shownSlideWord.id : 0], options as OptionsType))
       .then(() => {
         if (shownSlideWordIndex !== null) {
-          let targetIndex = shownSlideWordIndex == 1 ? ++shownSlideWordIndex : --shownSlideWordIndex
-          flatListRef.scrollToIndex({index: targetIndex, animated: true})
+          // let targetIndex = shownSlideWordIndex == 1 ? shownSlideWordIndex + 1 : shownSlideWordIndex - 1
+          // flatListRef.scrollToIndex({index: targetIndex, animated: true})
+          shownSlideWordIndex !== 1 && flatListRef.scrollToIndex({index: shownSlideWordIndex - 1, animated: true})
         }
       })
     // setDeletedIndex(index)
@@ -85,6 +93,7 @@ const CardActionButtons: FC<TProps> = ({
       color: textPrimaryColor,
       size: 30,
       onPress: handleChangeMeanings
+      // onPress: () => {}
     },
     {
       name: 'delete',
@@ -103,8 +112,15 @@ const CardActionButtons: FC<TProps> = ({
     },
   ]
 
+  const offset = useSharedValue(-CARD_BUTTONS_HEIGHT)
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      top: withTiming(offset.value * +!isSlider)
+    };
+  });
+
   return (
-    <>
+    <Animated.View style={[styles.cardButtonsContainer, animatedStyle, {height: CARD_BUTTONS_HEIGHT}]}>
       {buttonsArray.map((item) => <TouchableOpacity style={styles.actionBtn} key={item.name} onPress={item.onPress}>
         <Icon
           name={item.name}
@@ -113,7 +129,7 @@ const CardActionButtons: FC<TProps> = ({
           color={item.color}
         />
       </TouchableOpacity>)}
-    </>
+    </Animated.View>
   );
 };
 
@@ -129,7 +145,16 @@ const styles = StyleSheet.create({
     width: ACTION_BUTTON_SIZE,
     height: ACTION_BUTTON_SIZE,
     borderRadius: ACTION_BUTTON_SIZE/2,
-  }
+  },
+  cardButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: "absolute",
+    alignItems: "center",
+    top: -55,
+    right: 0,
+    left: 0
+  },
 })
 
 export default CardActionButtons;

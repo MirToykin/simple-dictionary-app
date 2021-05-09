@@ -18,7 +18,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store/configureStore";
 import {MapTranslation} from "../../assets/helpers";
-import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import AddWordForm from "../forms/AddWordForm";
 import {Dispatch} from "redux";
 import {
@@ -88,7 +88,7 @@ const AddWordModal: FC<TProps> = ({modalShown, setModalShown, setName}) => {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      transform: [{ translateY: withSpring(offset.value * 100) }],
+      transform: [{ translateY: withTiming(offset.value * 100) }],
     };
   });
 
