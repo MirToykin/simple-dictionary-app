@@ -3,7 +3,7 @@ import {SET_AUTH_DATA} from "../constants";
 import {setIsFetching, SetIsFetchingActionType} from "./appActions";
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType} from "../store/configureStore";
-import {OptionsType} from "../../types/types";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api: any = new Api();
 
@@ -11,7 +11,6 @@ type SetAuthDataPayloadType = {
   id: number | null
   name: string | null
   email: string | null
-  token: string | null
   isAuth: boolean
   rememberMe: boolean
 }
@@ -50,12 +49,10 @@ export const login = (loginData: TLoginData): AuthThunkType => async (dispatch) 
   try {
     const userData = await api.auth('login', loginData)
     const rememberMe = loginData.rememberMe
-    const options:OptionsType = {
-      headers: {
-        "Authorization": `Bearer ${userData.token}`
-      }
-    }
-    dispatch(setAuthData({...userData, isAuth: true, rememberMe, options}));
+
+    await AsyncStorage.setItem('token', userData.token)
+
+    dispatch(setAuthData({...userData, isAuth: true, rememberMe}))
   } catch (e) {
     let error;
 
@@ -74,31 +71,29 @@ export const login = (loginData: TLoginData): AuthThunkType => async (dispatch) 
 export const register = (regData: TRegData): AuthThunkType => async (dispatch) => {
   dispatch(setIsFetching(true));
   try {
-    const userData = await api.auth('register', regData);
+    const userData = await api.auth('register', regData)
     const rememberMe = regData.rememberMe;
-    const options:OptionsType = {
-      headers: {
-        "Authorization": `Bearer ${userData.token}`
-      }
-    }
-    dispatch(setAuthData({...userData, isAuth: true, rememberMe, options}));
+
+    await AsyncStorage.setItem('token', userData.token)
+
+    dispatch(setAuthData({...userData, isAuth: true, rememberMe}))
   } catch (e) {
     let error = 'Что-то пошло не так';
     if (e.response) {
       error = e.response.data.message
     }
-    dispatch(setIsFetching(false));
+    dispatch(setIsFetching(false))
     throw new Error(error)
   }
   dispatch(setIsFetching(false));
 }
 
-// export const logout = (options: OptionsType): AuthThunkType => async (dispatch, getState) => {
-export const logout = (options: any): AuthThunkType => async (dispatch) => {
+export const logout = (): AuthThunkType => async (dispatch) => {
   dispatch(setIsFetching(true));
 
   try {
-    await api.logout(options);
+    await api.logout();
+    await AsyncStorage.removeItem('token')
   } catch (e) {
 
   }
@@ -107,7 +102,6 @@ export const logout = (options: any): AuthThunkType => async (dispatch) => {
     id: null,
     name: null,
     email: null,
-    token: null,
     isAuth: false,
     rememberMe: false
   }));

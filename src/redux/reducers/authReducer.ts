@@ -8,9 +8,7 @@ let initialState = {
   email: null as string | null,
   isFetching: false,
   isAuth: false,
-  token: null as string | null,
-  rememberMe: false,
-  options: null as OptionsType | null
+  rememberMe: false
 }
 
 // fixme - убрать isFetching в appReducer

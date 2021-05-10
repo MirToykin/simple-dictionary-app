@@ -24,13 +24,13 @@ const api: TApi = new Api()
 
 export type TGetSet = SetIsFetchingActionType | AddSetActionType | SetAuthDataActionType
 export type GetSetThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TGetSet>
-export type GetSetThunkCreatorType = (uid: number, options: OptionsType) => GetSetThunkType
+export type GetSetThunkCreatorType = (uid: number) => GetSetThunkType
 // export type TGetSetActions = SetIsFetchingActionType | AddSetActionType // возможно лишний тип, исползуется для типизации dispatch в SetPage
 
-export const getSet = (set: SetNameType): GetSetThunkCreatorType => (uid, options) => async (dispatch, getState) => {
+export const getSet = (set: SetNameType): GetSetThunkCreatorType => (uid) => async (dispatch, getState) => {
   dispatch(setIsFetching(true))
   try {
-    const words = await api.getSet(set, uid, options)
+    const words = await api.getSet(set, uid)
     dispatch(addSet(set, words))
   } catch(e) {
     if (e.response && e.response.status === 401) {
@@ -54,15 +54,15 @@ export type TAddToSetData = {
 }
 export type TAddToSet = SetIsFetchingActionType | AddWordToStateActionType | SetAuthDataActionType
 export type AddToSetThunkType = ThunkAction<Promise<string|undefined>, AppStateType, unknown, TAddToSet>
-export type addToSetThunkCreatorType = (data: TAddToSetData, options: OptionsType) => AddToSetThunkType
+export type addToSetThunkCreatorType = (data: TAddToSetData) => AddToSetThunkType
 export type TAddToSetActions = SetIsFetchingActionType | AddSetActionType
 
-export const addToSet = (set: SetNameType): addToSetThunkCreatorType => (data, options) => async (dispatch) => {
+export const addToSet = (set: SetNameType): addToSetThunkCreatorType => (data) => async (dispatch) => {
   dispatch(setIsFetching(true))
   const newData: any = {...data, category: set}
 
   try {
-    const word = await api.addToSet(newData, options)
+    const word = await api.addToSet(newData)
     dispatch(addWordToState(set, word))
     dispatch(setIsFetching(false))
     return new Promise<string>(resolve => {
@@ -92,10 +92,10 @@ export type TEditWordData = {
 export type TEditWord = SetIsFetchingActionType | DeleteWordFromStateActionType | UpdateWordInStateActionType| SetAuthDataActionType
 export type EditWordThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TEditWord>
 
-export const editWord = (setToRemoveFrom: SetNameType, wordId: number, data:TEditWordData, options: OptionsType): EditWordThunkType => async (dispatch) => {
+export const editWord = (setToRemoveFrom: SetNameType, wordId: number, data:TEditWordData): EditWordThunkType => async (dispatch) => {
   dispatch(setIsFetching(true))
   try {
-    const word = await api.editWord(wordId, data, options)
+    const word = await api.editWord(wordId, data)
 
     dispatch(updateWordInState(word))
 
@@ -118,14 +118,14 @@ export const editWord = (setToRemoveFrom: SetNameType, wordId: number, data:TEdi
 export type TMoveAndDeleteWords = SetIsFetchingActionType | DeleteWordFromStateActionType| SetAuthDataActionType
 export type MoveWordsThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TMoveAndDeleteWords>
 
-export const moveWords = (idsArr: Array<number>, setToMove: SetNameType, setToRemoveFrom: SetNameType, options: OptionsType): MoveWordsThunkType => async (dispatch) => {
+export const moveWords = (idsArr: Array<number>, setToMove: SetNameType, setToRemoveFrom: SetNameType): MoveWordsThunkType => async (dispatch) => {
   dispatch(setIsFetching(true))
   const data = {
     idsArr,
     setToMove
   }
   try {
-    const updatedWordsIds = await api.moveWords(data, options)
+    const updatedWordsIds = await api.moveWords(data)
     dispatch(deleteWordsFromState(setToRemoveFrom, updatedWordsIds))
 
   } catch (e) {
@@ -146,10 +146,10 @@ export const moveWords = (idsArr: Array<number>, setToMove: SetNameType, setToRe
 export type TDeleteWord = SetIsFetchingActionType | DeleteWordFromStateActionType | SetAuthDataActionType
 export type DeleteWordThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TMoveAndDeleteWords>
 
-export const deleteWords = (set:SetNameType, wordIds: Array<number>, options: OptionsType): DeleteWordThunkType => async (dispatch: any) => {
+export const deleteWords = (set:SetNameType, wordIds: Array<number>): DeleteWordThunkType => async (dispatch: any) => {
   dispatch(setIsFetching(true))
   try {
-    const deletedWords = await api.deleteWord(wordIds, options)
+    const deletedWords = await api.deleteWord(wordIds)
     dispatch(deleteWordsFromState(set, deletedWords))
   } catch (e) {
     if (e.response && e.response.status === 401) {

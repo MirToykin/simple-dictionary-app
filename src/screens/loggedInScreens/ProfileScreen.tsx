@@ -10,11 +10,10 @@ import UserPhoto from '../../assets/images/user.png'
 
 const ProfileScreen = () => {
   const thunkDispatch: ThunkDispatch<AppStateType, unknown, AuthActionType> = useDispatch()
-  const options = useSelector((state: AppStateType) => state.auth.options)
   const {name, email} = useSelector((state: AppStateType) => state.auth)
 
   const handleLogout = () => {
-    thunkDispatch(logout(options))
+    thunkDispatch(logout())
   }
 
   const renderRow = (cells: any) => {
