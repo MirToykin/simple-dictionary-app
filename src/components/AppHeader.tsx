@@ -12,10 +12,7 @@ const AppHeader = () => {
   const isTabs = mainRoute === dictionariesRoute
   const activeTab = useSelector((state: AppStateType) => state.words.currentTab)
   const count = useSelector((state: AppStateType) => state.words[activeTab].length)
-
   const centerComponent = isTabs ? { text: `Слов в категории: ${count}`, style: { color: '#fff', fontSize: 18 } } : undefined
-
-  console.log('isTabs ',isTabs, activeTab)
 
   return (
     <Header

@@ -21,7 +21,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
 import {
-  primaryBackgroundColor
+  primaryBackgroundColor, textPrimaryColor
 } from "../../assets/styles";
 import WordDetailsModal from "./WordDetailsModal";
 import ActionButtons from "./ActionButtons";
@@ -83,6 +83,13 @@ const Set: FC<TProps> = ({setName}) => {
       />
     )
   }
+
+  const ListEmptyComponent = () => (
+    <View style={styles.listEmptyContainer}>
+      <Text style={styles.listEmptyText}>В данном наборе слов пока нет</Text>
+    </View>
+  )
+
   const keyExtractor = (word: WordType | TSliderSpacer) => word.id + '';
   const isFetching = useSelector((state: AppStateType) => state.app.isFetching)
   const uid = useSelector((state: AppStateType) => state.auth.id)
@@ -130,7 +137,7 @@ const Set: FC<TProps> = ({setName}) => {
           decelerationRate={"fast"}
           bounces={false}
           scrollEventThrottle={16}
-          contentContainerStyle={styles.flatListContainer}
+          contentContainerStyle={styles.cardFlatListContainer}
           showsHorizontalScrollIndicator={false}
           initialNumToRender={2}
           ref={(ref) => setFlatListRef(ref)}
@@ -145,6 +152,8 @@ const Set: FC<TProps> = ({setName}) => {
           onEndReachedThreshold={0.2}
           initialNumToRender={20}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={ListEmptyComponent}
+          contentContainerStyle={!set.length && styles.listFlatListContainer}
         />}
 
       <ActionButtons
@@ -156,6 +165,7 @@ const Set: FC<TProps> = ({setName}) => {
         setSliderMode={setSliderMode}
         sliderMode={sliderMode}
         screenWidth={width}
+        isSetEmpty={!set.length}
         handleDelete={() => {
           handleDelete(setName, selectedIDs, options as OptionsType)
         }}
@@ -194,9 +204,22 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0
   },
-  flatListContainer: {
+  cardFlatListContainer: {
     alignItems: 'stretch',
     paddingVertical: 50,
+  },
+  listFlatListContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  listEmptyContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
+  },
+  listEmptyText: {
+    color: textPrimaryColor,
+    fontSize: 18
   }
 })
 
