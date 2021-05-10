@@ -6,6 +6,7 @@ import {AppStateType} from "../redux/store/configureStore";
 import AuthenticatedNavigator from "./AuthenticatedNavigator";
 import RegistrationScreen from "../screens/RegistrationScreen";
 import ResetPwdScreen from "../screens/ResetPwdScreen";
+import {loginRoute, mainRoute, registrationRoute, resetPwdRoute} from "./constants";
 
 export type RootStackParamList = {
   Main: undefined
@@ -27,13 +28,13 @@ const RootNavigator = () => {
     }}>
       {isAuth ? (
         <>
-          <Stack.Screen name="Main" component={AuthenticatedNavigator}/>
+          <Stack.Screen name={mainRoute} component={AuthenticatedNavigator}/>
         </>
       ) : (
         <>
-          <Stack.Screen name="LogIn" component={LoginScreen}/>
-          <Stack.Screen name="Registration" component={RegistrationScreen} />
-          <Stack.Screen name="ResetPwd" component={ResetPwdScreen} />
+          <Stack.Screen name={loginRoute} component={LoginScreen}/>
+          <Stack.Screen name={registrationRoute} component={RegistrationScreen} />
+          <Stack.Screen name={resetPwdRoute} component={ResetPwdScreen} />
         </>
       )}
     </Stack.Navigator>

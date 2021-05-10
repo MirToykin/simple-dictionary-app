@@ -4,14 +4,28 @@ import {
   ADD_SET,
   UPDATE_WORD_IN_STATE,
   SET_SEARCH_INPUT,
-  PUSH_TO_ADDED_MEANINGS, DELETE_FROM_ADDED_MEANINGS, SET_ADDED_MEANINGS, SET_SET_SIZE, SHUFFLE_SET, SET_SELECTED_WORD
+  PUSH_TO_ADDED_MEANINGS,
+  DELETE_FROM_ADDED_MEANINGS,
+  SET_ADDED_MEANINGS,
+  SET_SET_SIZE,
+  SHUFFLE_SET,
+  SET_SELECTED_WORD,
+  SET_CURRENT_TAB_WORDS_COUNT
 } from "../constants"
-import {WordType} from "../../types/types"
+import {SetNameType, WordType} from "../../types/types"
 import {
-  AddSetActionType, AddWordToStateActionType,
-  DeleteFromAddedMeaningsActionType, DeleteWordFromStateActionType,
-  PushToAddedMeaningsActionType, SetAddedMeaningsActionType,
-  SetSearchInputActionType, TSetSelectedWordAction, TSetSetSizeAction, TShuffleSetAction, UpdateWordInStateActionType
+  AddSetActionType,
+  AddWordToStateActionType,
+  DeleteFromAddedMeaningsActionType,
+  DeleteWordFromStateActionType,
+  PushToAddedMeaningsActionType,
+  SetAddedMeaningsActionType,
+  SetSearchInputActionType,
+  TSetCurrentTabAction,
+  TSetSelectedWordAction,
+  TSetSetSizeAction,
+  TShuffleSetAction,
+  UpdateWordInStateActionType
 } from "../actions/wordsActions"
 
 let initialState = {
@@ -21,12 +35,14 @@ let initialState = {
   searchInput: '',
   addedMeanings: [] as Array<string>,
   setSize: 30 as number,
-  selectedWord: null as WordType | null
+  selectedWord: null as WordType | null,
+  currentTab: 'done' as SetNameType
 }
 
 type ActionType = AddSetActionType | SetSearchInputActionType | PushToAddedMeaningsActionType |
   DeleteFromAddedMeaningsActionType | SetAddedMeaningsActionType | TSetSetSizeAction | TShuffleSetAction |
-  DeleteWordFromStateActionType | AddWordToStateActionType | UpdateWordInStateActionType | TSetSelectedWordAction
+  DeleteWordFromStateActionType | AddWordToStateActionType | UpdateWordInStateActionType | TSetSelectedWordAction |
+  TSetCurrentTabAction
 
 type InitialStateType = typeof initialState
 
@@ -59,6 +75,8 @@ const wordsReducer = (state:InitialStateType = initialState, action:ActionType):
       return {...state, [action.payload]: state[action.payload].sort((a, b) => 0.5 - Math.random())}
     case SET_SELECTED_WORD:
       return {...state, selectedWord: action.payload}
+    case SET_CURRENT_TAB_WORDS_COUNT:
+      return {...state, currentTab: action.payload}
     default:
       return state
   }

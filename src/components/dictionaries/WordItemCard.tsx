@@ -25,13 +25,8 @@ import {showAlert} from "../../assets/helpers";
 
 type TProps = {
   word: WordType | TSliderSpacer,
-  setModalShown: (shown: boolean) => void
-  setSelectedIDs: React.Dispatch<React.SetStateAction<number[]>>
   slideWidth: number
   width: number
-  index: number
-  setDeletedIndex: any
-  scrollToIndex: any
 }
 
 const WordItemCard: FC<TProps> = ({word, slideWidth,width}) => {

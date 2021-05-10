@@ -13,7 +13,7 @@ import {
   SET_SET_SIZE,
   SHUFFLE_SET,
   SET_SELECTED_WORD,
-  RESET_ADD_WORD_FORM
+  RESET_ADD_WORD_FORM, SET_CURRENT_TAB_WORDS_COUNT
 } from "../constants"
 import {SetAuthDataActionType, setAuthData} from "./authActions"
 import {OptionsType, SetNameType, WordType} from "../../types/types"
@@ -307,5 +307,17 @@ export type TResetAddWordFormAction = {
 export const resetAddWordForm = (): TResetAddWordFormAction => {
   return {
     type: RESET_ADD_WORD_FORM
+  }
+}
+
+export type TSetCurrentTabAction = {
+  type: typeof SET_CURRENT_TAB_WORDS_COUNT,
+  payload: SetNameType
+}
+
+export const setCurrentTab = (payload: SetNameType): TSetCurrentTabAction => {
+  return {
+    type: SET_CURRENT_TAB_WORDS_COUNT,
+    payload
   }
 }

@@ -10,7 +10,14 @@ import {
 import {OptionsType, SetNameType, TSliderSpacer, WordType} from "../../types/types";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
-import {deleteWords, getSet, moveWords, TGetSet, TMoveAndDeleteWords} from "../../redux/actions/wordsActions";
+import {
+  deleteWords,
+  getSet,
+  moveWords, setCurrentTab,
+  TGetSet,
+  TMoveAndDeleteWords,
+  TSetCurrentTabAction
+} from "../../redux/actions/wordsActions";
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
 import {
@@ -23,6 +30,7 @@ import WordItemCard from "./WordItemCard";
 import CardActionButtons from "./CardActionButtons";
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {CARD_BUTTONS_HEIGHT, SLIDE_WIDTH, width} from "../../constants";
+import {Dispatch} from "redux";
 
 type TProps = {
   setName: SetNameType
@@ -34,11 +42,11 @@ const Set: FC<TProps> = ({setName}) => {
   console.log('set rendered')
   const thunkDispatchGetSet: ThunkDispatch<AppStateType, unknown, TGetSet> = useDispatch()
   const thunkDispatchMoveAndDelete: ThunkDispatch<AppStateType, unknown, TMoveAndDeleteWords> = useDispatch()
+  const dispatch: Dispatch<TSetCurrentTabAction> = useDispatch()
   const [editModalShown, setEditModalShown] = useState(false)
   const [addModalShown, setAddModalShown] = useState(false)
   const [selectedIDs, setSelectedIDs] = useState<Array<number>>([])
   const [sliderMode, setSliderMode] = useState(false)
-  const [deletedIndex, setDeletedIndex] = useState<null | number>(null)
   const [shownSlideWord, setShownSlideWord] = useState<null | WordType>(null)
   const [shownSlideWordIndex, setShownSlideWordIndex] = useState<null | number>(null)
 
@@ -67,20 +75,11 @@ const Set: FC<TProps> = ({setName}) => {
     )
   }
 
-  const scrollToIndex = () => {
-    flatListRef.scrollToIndex({index: 5, animated: true})
-  }
-
   const renderItemCard: ListRenderItem<WordType | TSliderSpacer> = ({item, index}) => {
     return (
       <WordItemCard word={item}
-                    index={index}
-                    setDeletedIndex={setDeletedIndex}
-                    setModalShown={setEditModalShown}
-                    setSelectedIDs={setSelectedIDs}
                     slideWidth={SLIDE_WIDTH}
                     width={width}
-                    scrollToIndex={scrollToIndex}
       />
     )
   }
@@ -94,8 +93,11 @@ const Set: FC<TProps> = ({setName}) => {
   }
 
   useEffect(() => {
-    fetchData()
+    fetchData().catch(() => {
+      //todo сделать toast на случай ошибки
+    })
     setSelectedIDs([])
+    dispatch(setCurrentTab(setName))
   }, [setName])
 
   const handleMove = (idsArr: Array<number>, setToMoveTo: SetNameType, setToRemoveFrom: SetNameType, options: OptionsType): void => {
@@ -125,7 +127,7 @@ const Set: FC<TProps> = ({setName}) => {
           // onRefresh={fetchData}
           onEndReachedThreshold={0.2}
           snapToInterval={SLIDE_WIDTH}
-          decelerationRate={0}
+          decelerationRate={"fast"}
           bounces={false}
           scrollEventThrottle={16}
           contentContainerStyle={styles.flatListContainer}
