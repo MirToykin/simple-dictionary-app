@@ -22,6 +22,7 @@ import {
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {showAlert} from "../../assets/helpers";
+import {SLIDER_SPACER_WIDTH} from "../../constants";
 
 type TProps = {
   word: WordType | TSliderSpacer,
@@ -32,7 +33,7 @@ type TProps = {
 const WordItemCard: FC<TProps> = ({word, slideWidth,width}) => {
 
   if (isTSliderSpacer(word)) {
-    return <View style={{width: (width - slideWidth) / 2}}/>
+    return <View style={{width: SLIDER_SPACER_WIDTH}}/>
   }
 
   const meanings = word.meanings.split('/')

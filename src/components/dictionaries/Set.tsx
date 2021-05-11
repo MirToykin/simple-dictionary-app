@@ -29,7 +29,7 @@ import AddWordModal from "./AddWordModal";
 import WordItemCard from "./WordItemCard";
 import CardActionButtons from "./CardActionButtons";
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
-import {CARD_BUTTONS_HEIGHT, SLIDE_WIDTH, width} from "../../constants";
+import {CARD_BUTTONS_HEIGHT, SLIDE_WIDTH, SLIDER_SPACER_WIDTH, width} from "../../constants";
 import {Dispatch} from "redux";
 
 type TProps = {
@@ -84,6 +84,13 @@ const Set: FC<TProps> = ({setName}) => {
                     width={width}
       />
     )
+  }
+
+  const getItemLayout = (data: (WordType | TSliderSpacer)[] | null | undefined, index: number) => {
+    const isSpacer = index === 0 || index === set.length - 1
+    const itemWidth = isSpacer ? SLIDER_SPACER_WIDTH : SLIDE_WIDTH
+    const offset = index === 0 ? 0 : SLIDE_WIDTH * (index - 1) + SLIDER_SPACER_WIDTH
+    return {length: itemWidth, offset: offset, index}
   }
 
   const ListEmptyComponent = () => (
@@ -153,7 +160,7 @@ const Set: FC<TProps> = ({setName}) => {
           ref={(ref) => setFlatListRef(ref)}
           onViewableItemsChanged={onViewRef}
           contentOffset={contentOffset}
-          // initialScrollIndex={lastScrolledCardIndex}
+          getItemLayout={getItemLayout}
         /> :
         <FlatList<WordType>
           data={set}
