@@ -1,6 +1,5 @@
 import {SET_AUTH_DATA} from "../constants"
 import {SetAuthDataActionType} from "../actions/authActions";
-import {OptionsType} from "../../types/types";
 
 let initialState = {
   id: null as number | null,

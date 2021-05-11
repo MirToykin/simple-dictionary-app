@@ -3,7 +3,7 @@ import React, {FC, useEffect} from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Icon} from "react-native-elements";
 import {errorColor, secondaryColor, successColor, textPrimaryColor,} from "../../assets/styles";
-import {OptionsType, SetNameType, TSliderSpacer, WordType} from "../../types/types";
+import {SetNameType, TSliderSpacer, WordType} from "../../types/types";
 import Animated, {useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming} from "react-native-reanimated";
 import {showAlert} from "../../assets/helpers";
 import {useDispatch, useSelector} from "react-redux";
@@ -43,7 +43,6 @@ const CardActionButtons: FC<TProps> = ({
   //   shownSlideWord && dispatch(setSelectedWord(shownSlideWord))
   // }, [shownSlideWord])
 
-  const options = useSelector((state: AppStateType) => state.auth.options)
   const thunkDispatchMoveAndDelete: ThunkDispatch<AppStateType, unknown, TMoveAndDeleteWords> = useDispatch()
   const dispatch: Dispatch<TSetSelectedWordAction> = useDispatch()
 
@@ -60,7 +59,7 @@ const CardActionButtons: FC<TProps> = ({
 
   }
   const handleDelete = () => {
-    thunkDispatchMoveAndDelete(deleteWords('current', [shownSlideWord ? shownSlideWord.id : 0], options as OptionsType))
+    thunkDispatchMoveAndDelete(deleteWords('current', [shownSlideWord ? shownSlideWord.id : 0]))
       .then(() => {
         if (shownSlideWordIndex !== null) {
           // let targetIndex = shownSlideWordIndex == 1 ? shownSlideWordIndex + 1 : shownSlideWordIndex - 1

@@ -7,6 +7,7 @@ import {SetNameType} from "../../types/types";
 import Animated, {useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming} from "react-native-reanimated";
 import {showAlert} from "../../assets/helpers";
 import {ACTION_BUTTON_SIZE, ACTION_BUTTON_SPACING} from "../../constants";
+import index from "@react-native-community/masked-view";
 
 
 type TSetData = {
@@ -29,6 +30,7 @@ type TProps = {
   sliderMode: boolean
   screenWidth: number
   isSetEmpty: boolean
+  setLastOffset: () => void
 }
 
 const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
@@ -36,7 +38,8 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
                                      handleMoveBack, handleMoveForward,
                                      nextSetData, prevSetData,
                                      setSliderMode, sliderMode,
-                                     screenWidth, isSetEmpty
+                                     screenWidth, isSetEmpty,
+                                     setLastOffset
                                    }) => {
   type TButton = {
     name: string,
@@ -112,7 +115,10 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       color: textPrimaryColor,
       size: 30,
       condition: setName === 'current',
-      onPress: () => setSliderMode(!sliderMode),
+      onPress: () => {
+        setSliderMode(!sliderMode)
+        !sliderMode && setLastOffset()
+      },
       animationOptions: {
         btnUseAnimatedStyle: useSwitchCurrentSetModeOffset
       },

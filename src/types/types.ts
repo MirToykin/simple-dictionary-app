@@ -13,9 +13,6 @@ export type SetNameType = 'next'|'current'|'done';
 type HeadersType = {
     Authorization: string
 }
-export type OptionsType = {
-    headers: HeadersType
-}
 
 export type TSliderSpacer = {
     key: string,
@@ -27,6 +24,5 @@ export function isTSliderSpacer(obj: any): obj is TSliderSpacer {
 
 // export type TSetProps = {
 //     uid: number
-//     options: OptionsType
 //     token: string
 // }

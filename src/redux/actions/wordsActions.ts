@@ -16,7 +16,7 @@ import {
   RESET_ADD_WORD_FORM, SET_CURRENT_TAB_WORDS_COUNT
 } from "../constants"
 import {SetAuthDataActionType, setAuthData} from "./authActions"
-import {OptionsType, SetNameType, WordType} from "../../types/types"
+import {SetNameType, WordType} from "../../types/types"
 import {ThunkAction} from "redux-thunk"
 import {AppStateType} from "../store/configureStore"
 

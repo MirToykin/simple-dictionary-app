@@ -5,9 +5,9 @@ import {
   ListRenderItem,
   StyleSheet,
   View,
-  Animated as RNAnimated, TouchableOpacity, Text
+  Animated as RNAnimated, TouchableOpacity, Text, NativeScrollEvent, NativeSyntheticEvent
 } from "react-native";
-import {OptionsType, SetNameType, TSliderSpacer, WordType} from "../../types/types";
+import {SetNameType, TSliderSpacer, WordType} from "../../types/types";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {
@@ -49,6 +49,8 @@ const Set: FC<TProps> = ({setName}) => {
   const [sliderMode, setSliderMode] = useState(false)
   const [shownSlideWord, setShownSlideWord] = useState<null | WordType>(null)
   const [shownSlideWordIndex, setShownSlideWordIndex] = useState<null | number>(null)
+  const [lastScrolledCardOffset, setLastScrolledCardOffset] = useState(0);
+  const [contentOffset, setContentOffset] = useState({x: 0, y: 0});
 
   let set = useSelector((state: AppStateType) => state.words[setName])
   let sliderSet: Array<WordType | TSliderSpacer> = []
@@ -93,10 +95,9 @@ const Set: FC<TProps> = ({setName}) => {
   const keyExtractor = (word: WordType | TSliderSpacer) => word.id + '';
   const isFetching = useSelector((state: AppStateType) => state.app.isFetching)
   const uid = useSelector((state: AppStateType) => state.auth.id)
-  const options = useSelector((state: AppStateType) => state.auth.options)
 
   const fetchData = async () => {
-    thunkDispatchGetSet(getWords(uid as number, options as OptionsType)).catch(() => {})
+    thunkDispatchGetSet(getWords(uid as number)).catch(() => {})
   }
 
   useEffect(() => {
@@ -107,14 +108,22 @@ const Set: FC<TProps> = ({setName}) => {
     dispatch(setCurrentTab(setName))
   }, [setName])
 
-  const handleMove = (idsArr: Array<number>, setToMoveTo: SetNameType, setToRemoveFrom: SetNameType, options: OptionsType): void => {
-    thunkDispatchMoveAndDelete(moveWords(idsArr, setToMoveTo, setToRemoveFrom, options)).catch(() => {})
+  const handleMove = (idsArr: Array<number>, setToMoveTo: SetNameType, setToRemoveFrom: SetNameType): void => {
+    thunkDispatchMoveAndDelete(moveWords(idsArr, setToMoveTo, setToRemoveFrom)).catch(() => {})
     setSelectedIDs([]);
   }
 
-  const handleDelete = (setToRemoveFrom: SetNameType, idsArray: Array<number>, options: OptionsType): void => {
-    thunkDispatchMoveAndDelete(deleteWords(setToRemoveFrom, idsArray, options)).catch(() => {})
+  const handleDelete = (setToRemoveFrom: SetNameType, idsArray: Array<number>): void => {
+    thunkDispatchMoveAndDelete(deleteWords(setToRemoveFrom, idsArray)).catch(() => {})
     setSelectedIDs([]);
+  }
+
+  const setLastOffset = () => {
+    setContentOffset({x: lastScrolledCardOffset, y: 0})
+  }
+
+  const handleScroll = (event:  NativeSyntheticEvent<NativeScrollEvent>) => {
+    setLastScrolledCardOffset(event.nativeEvent.contentOffset.x)
   }
 
   const onViewRef = useRef((viewableItems: any)=> {
@@ -137,11 +146,14 @@ const Set: FC<TProps> = ({setName}) => {
           decelerationRate={"fast"}
           bounces={false}
           scrollEventThrottle={16}
+          onScroll={handleScroll}
           contentContainerStyle={styles.cardFlatListContainer}
           showsHorizontalScrollIndicator={false}
-          initialNumToRender={2}
+          initialNumToRender={20}
           ref={(ref) => setFlatListRef(ref)}
           onViewableItemsChanged={onViewRef}
+          contentOffset={contentOffset}
+          // initialScrollIndex={lastScrolledCardIndex}
         /> :
         <FlatList<WordType>
           data={set}
@@ -166,14 +178,15 @@ const Set: FC<TProps> = ({setName}) => {
         sliderMode={sliderMode}
         screenWidth={width}
         isSetEmpty={!set.length}
+        setLastOffset={setLastOffset}
         handleDelete={() => {
-          handleDelete(setName, selectedIDs, options as OptionsType)
+          handleDelete(setName, selectedIDs)
         }}
         handleMoveForward={() => {
-          handleMove(selectedIDs, nextSet, setName, options as OptionsType)
+          handleMove(selectedIDs, nextSet, setName)
         }}
         handleMoveBack={() => {
-          handleMove(selectedIDs, prevSet, setName, options as OptionsType)
+          handleMove(selectedIDs, prevSet, setName)
         }}
       />
       <CardActionButtons

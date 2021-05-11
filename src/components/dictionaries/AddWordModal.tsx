@@ -30,7 +30,7 @@ import {
 } from "../../redux/actions/wordsActions";
 import {formValueSelector} from "redux-form";
 import {ThunkDispatch} from "redux-thunk";
-import {OptionsType, SetNameType} from "../../types/types";
+import {SetNameType} from "../../types/types";
 
 const {width, height} = Dimensions.get('window')
 
@@ -44,7 +44,6 @@ const selector = formValueSelector('AddWordForm');
 
 const AddWordModal: FC<TProps> = ({modalShown, setModalShown, setName}) => {
   const addedMeanings = useSelector((state: AppStateType) => state.words.addedMeanings)
-  const options = useSelector((state: AppStateType) => state.auth.options)
   const uid = useSelector((state: AppStateType) => state.auth.id)
   const dispatch: Dispatch<SetAddedMeaningsActionType|TResetAddWordFormAction> = useDispatch();
   const thunkDispatch: ThunkDispatch<AppStateType, unknown, TAddToSet> = useDispatch();
@@ -75,7 +74,7 @@ const AddWordModal: FC<TProps> = ({modalShown, setModalShown, setName}) => {
     newWord['user_id'] = uid as number
     newWord['meanings'] = addedMeanings.join('/').toLowerCase()
     dispatch(setAddedMeanings([]))
-    return thunkDispatch(addToSet(setName)(newWord, options as OptionsType))
+    return thunkDispatch(addToSet(setName)(newWord))
       .then((message) => {
         message && setMessage(message)
       })

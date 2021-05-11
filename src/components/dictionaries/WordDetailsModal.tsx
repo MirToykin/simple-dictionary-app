@@ -18,7 +18,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store/configureStore";
 import {MapTranslation} from "../../assets/helpers";
 import AddMeaningForm from "../forms/AddMeaningForm";
-import {OptionsType} from "../../types/types";
 import {
   editWord,
   setAddedMeanings, SetAddedMeaningsActionType,
@@ -38,13 +37,12 @@ type TProps = {
 const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
   const selectedWord = useSelector((state: AppStateType) => state.words.selectedWord)
   const addedMeanings = useSelector((state: AppStateType) => state.words.addedMeanings)
-  const options = useSelector((state: AppStateType) => state.auth.options)
   const dispatchEdit: ThunkDispatch<AppStateType, unknown, TEditWord> = useDispatch()
   const dispatch: Dispatch<SetAddedMeaningsActionType> = useDispatch();
 
-  const onSaveChanges = (meaningsArray: Array<string>, id: number, options: OptionsType) => {
+  const onSaveChanges = (meaningsArray: Array<string>, id: number) => {
     const meanings = meaningsArray.join('/').toLowerCase();
-    dispatchEdit(editWord('current', id, {meanings}, options)); // current - указан в качестве заглушки, как валидный для типа SetNameType
+    dispatchEdit(editWord('current', id, {meanings})); // current - указан в качестве заглушки, как валидный для типа SetNameType
     // в данном вызове этот параметр не используется
     dispatch(setAddedMeanings([]));
     setModalShown(false)
@@ -103,7 +101,7 @@ const WordDetailsModal: FC<TProps> = ({modalShown, setModalShown}) => {
                         <TouchableOpacity
                             disabled={selectedWord?.meanings === addedMeanings.join('/')}
                             style={styles.saveBtn}
-                            onPress={() => onSaveChanges(addedMeanings, selectedWord ? selectedWord.id as number : 0, options as OptionsType)}>
+                            onPress={() => onSaveChanges(addedMeanings, selectedWord ? selectedWord.id as number : 0)}>
                             <Text style={[styles.saveBtnText, styles.btnText]}>СОХРАНИТЬ</Text>
                         </TouchableOpacity>
                     </Animated.View>

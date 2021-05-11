@@ -1,7 +1,7 @@
 import React, {FC, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Dimensions, Animated, ScrollView} from "react-native";
 import {Icon, Text} from 'react-native-elements';
-import {isTSliderSpacer, OptionsType, SetNameType, TSliderSpacer, WordType} from "../../types/types";
+import {isTSliderSpacer, TSliderSpacer, WordType} from "../../types/types";
 import {
   errorColor,
   primaryBackgroundColor,
