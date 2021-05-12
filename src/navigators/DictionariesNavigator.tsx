@@ -10,6 +10,7 @@ import {setCurrentTab, TSetCurrentTabAction} from "../redux/actions/wordsActions
 import {Dispatch} from "redux";
 import {useDispatch} from "react-redux";
 import {currentSetRoute, doneSetRoute, nextSetRoute} from "./constants";
+import {TAB_BAR_HEIGHT} from "../constants";
 
 const Tab = createBottomTabNavigator()
 
@@ -31,7 +32,7 @@ const DictionariesNavigator = () => {
           activeBackgroundColor: primaryBackgroundColor,
           style: {
             backgroundColor: secondaryBackgroundColor,
-            height: 50,
+            height: TAB_BAR_HEIGHT,
             // position: 'absolute'
           },
           tabStyle: {

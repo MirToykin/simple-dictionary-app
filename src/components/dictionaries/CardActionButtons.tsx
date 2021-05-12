@@ -62,12 +62,9 @@ const CardActionButtons: FC<TProps> = ({
     thunkDispatchMoveAndDelete(deleteWords('current', [shownSlideWord ? shownSlideWord.id : 0]))
       .then(() => {
         if (shownSlideWordIndex !== null) {
-          // let targetIndex = shownSlideWordIndex == 1 ? shownSlideWordIndex + 1 : shownSlideWordIndex - 1
-          // flatListRef.scrollToIndex({index: targetIndex, animated: true})
           shownSlideWordIndex !== 1 && flatListRef.scrollToIndex({index: shownSlideWordIndex - 1, animated: true})
         }
       })
-    // setDeletedIndex(index)
   }
 
   type TActionButton = {
@@ -152,7 +149,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     top: -55,
     right: 0,
-    left: 0
+    left: 0,
+    zIndex: 2,
   },
 })
 

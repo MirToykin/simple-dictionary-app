@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from "@react-navigation/native";
 import RootNavigator from './navigators/RootNavigator'

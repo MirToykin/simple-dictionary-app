@@ -21,7 +21,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
 import {
-  primaryBackgroundColor, textPrimaryColor
+  primaryBackgroundColor, secondaryBackgroundColor, textPrimaryColor
 } from "../../assets/styles";
 import WordDetailsModal from "./WordDetailsModal";
 import ActionButtons from "./ActionButtons";
@@ -29,14 +29,22 @@ import AddWordModal from "./AddWordModal";
 import WordItemCard from "./WordItemCard";
 import CardActionButtons from "./CardActionButtons";
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
-import {CARD_BUTTONS_HEIGHT, SLIDE_WIDTH, SLIDER_SPACER_WIDTH, width} from "../../constants";
+import {
+  CARD_BUTTONS_HEIGHT,
+  SLIDE_WIDTH,
+  SLIDER_SPACER_WIDTH,
+  width,
+  height,
+  STATUS_BAR_HEIGHT,
+  HEADER_HEIGHT, TAB_BAR_HEIGHT
+} from "../../constants";
 import {Dispatch} from "redux";
 
 type TProps = {
   setName: SetNameType
 }
 
-// const {width, height} = Dimensions.get('window')
+const sliderOffset = -(height - HEADER_HEIGHT)
 
 const Set: FC<TProps> = ({setName}) => {
   console.log('set rendered')
@@ -49,15 +57,12 @@ const Set: FC<TProps> = ({setName}) => {
   const [sliderMode, setSliderMode] = useState(false)
   const [shownSlideWord, setShownSlideWord] = useState<null | WordType>(null)
   const [shownSlideWordIndex, setShownSlideWordIndex] = useState<null | number>(null)
-  const [lastScrolledCardOffset, setLastScrolledCardOffset] = useState(0);
-  const [contentOffset, setContentOffset] = useState({x: 0, y: 0});
 
   let set = useSelector((state: AppStateType) => state.words[setName])
-  let sliderSet: Array<WordType | TSliderSpacer> = []
+  let sliderSet: Array<WordType | TSliderSpacer> = [{key: 'left-spacer', id: -1}, ...set, {key: 'right-spacer', id: 0}]
   const [flatListRef, setFlatListRef] = useState<any>(null)
 
   const isSlider = sliderMode && setName === 'current';
-  if (isSlider) sliderSet = [{key: 'left-spacer', id: -1}, ...set, {key: 'right-spacer', id: 0}]
 
   const routes: Array<SetNameType> = ['next', 'current', 'done']
   const setData = {
@@ -125,43 +130,41 @@ const Set: FC<TProps> = ({setName}) => {
     setSelectedIDs([]);
   }
 
-  const setLastOffset = () => {
-    setContentOffset({x: lastScrolledCardOffset, y: 0})
-  }
-
-  const handleScroll = (event:  NativeSyntheticEvent<NativeScrollEvent>) => {
-    setLastScrolledCardOffset(event.nativeEvent.contentOffset.x)
-  }
-
   const onViewRef = useRef((viewableItems: any)=> {
     const visibleCard = viewableItems.viewableItems[1]
     visibleCard && setShownSlideWordIndex(visibleCard.index)
     visibleCard && setShownSlideWord(visibleCard.item)
   }).current
 
+  const offset = useSharedValue(sliderOffset)
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: withTiming(offset.value * +!isSlider)
+    };
+  });
+
   return (
     <View style={styles.container}>
-      {isSlider ? <RNAnimated.FlatList<WordType | TSliderSpacer> //Animated.FlatList рендерится быстрее чем FlatList ???
+      {setName === 'current' && <Animated.View style={[styles.sliderContainer, animatedStyle]}>
+        <RNAnimated.FlatList<WordType | TSliderSpacer> //Animated.FlatList рендерится быстрее чем FlatList ???
           data={sliderSet}
           renderItem={renderItemCard}
           keyExtractor={keyExtractor}
-          // refreshing={isFetching}
           horizontal
-          // onRefresh={fetchData}
           onEndReachedThreshold={0.2}
           snapToInterval={SLIDE_WIDTH}
           decelerationRate={"fast"}
           bounces={false}
           scrollEventThrottle={16}
-          onScroll={handleScroll}
           contentContainerStyle={styles.cardFlatListContainer}
           showsHorizontalScrollIndicator={false}
-          initialNumToRender={20}
+          initialNumToRender={2}
           ref={(ref) => setFlatListRef(ref)}
           onViewableItemsChanged={onViewRef}
-          contentOffset={contentOffset}
           getItemLayout={getItemLayout}
-        /> :
+        />
+      </Animated.View>}
+      <View>
         <FlatList<WordType>
           data={set}
           renderItem={renderItem}
@@ -173,8 +176,8 @@ const Set: FC<TProps> = ({setName}) => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={ListEmptyComponent}
           contentContainerStyle={!set.length && styles.listFlatListContainer}
-        />}
-
+        />
+      </View>
       <ActionButtons
         setName={setName}
         setAddModalShown={setAddModalShown}
@@ -185,7 +188,6 @@ const Set: FC<TProps> = ({setName}) => {
         sliderMode={sliderMode}
         screenWidth={width}
         isSetEmpty={!set.length}
-        setLastOffset={setLastOffset}
         handleDelete={() => {
           handleDelete(setName, selectedIDs)
         }}
@@ -214,6 +216,13 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: primaryBackgroundColor,
     flex: 1
+  },
+  sliderContainer: {
+    position: 'absolute',
+    height: '100%',
+    backgroundColor: primaryBackgroundColor,
+    zIndex: 1,
+    bottom: sliderOffset
   },
   cardButtonsContainer: {
     flexDirection: 'row',

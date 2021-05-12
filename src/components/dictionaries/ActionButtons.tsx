@@ -30,7 +30,6 @@ type TProps = {
   sliderMode: boolean
   screenWidth: number
   isSetEmpty: boolean
-  setLastOffset: () => void
 }
 
 const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
@@ -38,8 +37,7 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
                                      handleMoveBack, handleMoveForward,
                                      nextSetData, prevSetData,
                                      setSliderMode, sliderMode,
-                                     screenWidth, isSetEmpty,
-                                     setLastOffset
+                                     screenWidth, isSetEmpty
                                    }) => {
   type TButton = {
     name: string,
@@ -117,7 +115,6 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
       condition: setName === 'current',
       onPress: () => {
         setSliderMode(!sliderMode)
-        !sliderMode && setLastOffset()
       },
       animationOptions: {
         btnUseAnimatedStyle: useSwitchCurrentSetModeOffset
@@ -215,6 +212,7 @@ const styles = StyleSheet.create({
     width: ACTION_BUTTON_SIZE,
     height: ACTION_BUTTON_SIZE,
     borderRadius: ACTION_BUTTON_SIZE/2,
+    zIndex: 2,
   }
 })
 

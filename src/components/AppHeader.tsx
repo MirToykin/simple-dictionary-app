@@ -1,10 +1,11 @@
 import React from 'react';
-import {Header, Icon} from "react-native-elements";
+import {Header} from "react-native-elements";
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import {primaryColor, secondaryBackgroundColor} from "../assets/styles";
 import {useSelector} from "react-redux";
 import {AppStateType} from "../redux/store/configureStore";
 import {dictionariesRoute} from "../navigators/constants";
+import {HEADER_HEIGHT} from "../constants";
 
 const AppHeader = () => {
   const navigation = useNavigation()
@@ -15,12 +16,14 @@ const AppHeader = () => {
   const centerComponent = isTabs ? { text: `Слов в категории: ${count}`, style: { color: '#fff', fontSize: 18 } } : undefined
 
   return (
-    <Header
-      leftComponent={{ icon: 'menu', color: primaryColor, onPress: () => {navigation.toggleDrawer()} }}
-      centerComponent={centerComponent}
-      rightComponent={{ icon: 'search', color: primaryColor}}
-      backgroundColor={secondaryBackgroundColor}
-    />
+      <Header
+        leftComponent={{ icon: 'menu', color: primaryColor, onPress: () => {navigation.toggleDrawer()} }}
+        centerComponent={centerComponent}
+        rightComponent={{ icon: 'search', color: primaryColor}}
+        backgroundColor={secondaryBackgroundColor}
+        containerStyle={{height: HEADER_HEIGHT}}
+      />
+
   );
 };
 
