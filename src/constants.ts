@@ -10,5 +10,5 @@ export const CARD_BUTTONS_HEIGHT = 60
 export const SLIDER_SPACER_WIDTH = (width - SLIDE_WIDTH) / 2
 
 export const TAB_BAR_HEIGHT = 50
-export const HEADER_HEIGHT = 60
+export const HEADER_HEIGHT = 50
 export const STATUS_BAR_HEIGHT = StatusBar.currentHeight

@@ -1,34 +1,17 @@
 import React from "react";
-import {Icon, Input} from "react-native-elements";
-import {TouchableOpacity} from "react-native";
-import {secondaryColor, textPrimaryColor} from "./styles";
-
-// @ts-ignore
-export const renderAuthInput = ({secureTextEntry=false, leftIcon, placeholder, input: { onChange, ...restInput }, ...restCustom}) => {
-  return <Input
-    inputStyle={{
-      color: '#fff'
-    }}
-    secureTextEntry={secureTextEntry}
-    placeholder={placeholder}
-    inputContainerStyle={{
-      marginHorizontal: 15
-    }}
-    onChangeText={onChange}
-    leftIcon={!!leftIcon && { type: 'font-awesome', color: 'rgba(255 ,255,255,0.6)', ...leftIcon }}
-    {...restInput}
-    {...restCustom}
-  />
-}
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import {TouchableOpacity} from "react-native"
+import {secondaryColor, textPrimaryColor} from "./styles"
+import {Input} from "react-native-elements"
+import CustomInput from "../components/inputs/Input";
 
 export const InputIcon = ({onIconPress}: {onIconPress: () => void | undefined}) => {
   return (
     <TouchableOpacity
       onPress={onIconPress}
     >
-      <Icon
+      <AntDesignIcon
         name={'plus'}
-        type={'antdesign'}
         size={30}
         color={secondaryColor}
       />
@@ -45,5 +28,19 @@ export const renderAddMeaningInput = ({input: {onChange, ...restInput}, ...custo
     onChangeText={onChange}
     {...restInput}
     {...custom}
+  />
+}
+
+// @ts-ignore
+export const renderCustomInput = ({input: {onChange, ...restInput}, leftIcon, rightIcon, secureTextEntry=false, ...custom}) => {
+  return <CustomInput
+    inputProps={{
+      onChangeText: onChange,
+      secureTextEntry,
+      ...restInput,
+      ...custom
+    }}
+    leftIcon={leftIcon}
+    rightIcon={rightIcon}
   />
 }

@@ -1,27 +1,12 @@
-import React, {FC, useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View, Dimensions, Animated, ScrollView} from "react-native";
-import {Icon, Text} from 'react-native-elements';
+import React, {FC} from 'react';
+import {StyleSheet, View, ScrollView, Text} from "react-native";
 import {isTSliderSpacer, TSliderSpacer, WordType} from "../../types/types";
 import {
   errorColor,
-  primaryBackgroundColor,
   primaryColor,
   secondaryBackgroundColor,
-  secondaryColor,
   textPrimaryColor, textSecondaryColor
 } from "../../assets/styles";
-import {Dispatch} from "redux";
-import {useDispatch, useSelector} from "react-redux";
-import {
-  deleteWords,
-  moveWords,
-  setSelectedWord,
-  TMoveAndDeleteWords,
-  TSetSelectedWordAction
-} from "../../redux/actions/wordsActions";
-import {ThunkDispatch} from "redux-thunk";
-import {AppStateType} from "../../redux/store/configureStore";
-import {showAlert} from "../../assets/helpers";
 import {SLIDER_SPACER_WIDTH} from "../../constants";
 
 type TProps = {

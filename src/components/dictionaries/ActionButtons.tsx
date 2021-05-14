@@ -1,21 +1,18 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, ReactElement, useEffect} from 'react';
 
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Icon} from "react-native-elements";
-import {errorColor, secondaryColor, successColor, textPrimaryColor,} from "../../assets/styles";
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {errorColor, successColor, textPrimaryColor,} from "../../assets/styles";
 import {SetNameType} from "../../types/types";
-import Animated, {useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming} from "react-native-reanimated";
+import Animated, {useAnimatedStyle, useSharedValue, withDelay, withTiming} from "react-native-reanimated";
 import {showAlert} from "../../assets/helpers";
 import {ACTION_BUTTON_SIZE, ACTION_BUTTON_SPACING} from "../../constants";
-import index from "@react-native-community/masked-view";
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 
 type TSetData = {
   title: string
-  icon: {
-    name: string
-    type: string
-  }
+  icon: ReactElement
 }
 type TProps = {
   setName: SetNameType
@@ -40,15 +37,13 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
                                      screenWidth, isSetEmpty
                                    }) => {
   type TButton = {
-    name: string,
-    type: string,
-    color: string,
-    size: number,
+    id: number,
     condition: boolean
     onPress: () => void
     disabled?: boolean
     animationOptions?: any
-    constant: boolean
+    constant: boolean,
+    icon: ReactElement
   }
 
   const offset = useSharedValue(1)
@@ -96,22 +91,17 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
 
   let buttons: Array<TButton> = [
     {
-      name: 'plus',
-      type: 'antdesign',
-      color: successColor,
-      size: 35,
+      id: 1,
       condition: setName !== 'done',
       onPress: () => setAddModalShown(true),
       animationOptions: {
         btnUseAnimatedStyle: usePlusOffsetAnimatedStyle
       },
-      constant: true
+      constant: true,
+      icon: <AntDesignIcon name={'plus'} size={35} color={successColor}/>
     },
     {
-      name: sliderMode ? 'format-list-bulleted' : 'my-library-books',
-      type: 'material',
-      color: textPrimaryColor,
-      size: 30,
+      id: 2,
       condition: setName === 'current',
       onPress: () => {
         setSliderMode(!sliderMode)
@@ -120,13 +110,11 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
         btnUseAnimatedStyle: useSwitchCurrentSetModeOffset
       },
       constant: true,
-      disabled: isSetEmpty
+      disabled: isSetEmpty,
+      icon: <MaterialIcon name={sliderMode ? 'format-list-bulleted' : 'my-library-books'} size={30} color={textPrimaryColor}/>
     },
     {
-      name: nextSetData.icon.name,
-      type: nextSetData.icon.type,
-      color: textPrimaryColor,
-      size: 30,
+      id: 3,
       condition: true,
       onPress: () => showAlert('Перемещение', `Переместить отмеченные слова (${selectedIDs.length}) в набор "${nextSetData.title}"`, 'Переместить', handleMoveForward),
       disabled: !selectedIDs.length,
@@ -134,13 +122,11 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
         delay: !selectedIDs.length ? 100 : 0,
         btnUseAnimatedStyle: useOffsetAnimatedStyle
       },
-      constant: false
+      constant: false,
+      icon: nextSetData.icon
     },
     {
-      name: prevSetData.icon.name,
-      type: prevSetData.icon.type,
-      color: textPrimaryColor,
-      size: 30,
+      id: 4,
       condition: true,
       onPress: () => showAlert('Перемещение', `Переместить отмеченные слова (${selectedIDs.length}) в набор "${prevSetData.title}"`, 'Переместить', handleMoveBack),
       disabled: !selectedIDs.length,
@@ -148,13 +134,11 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
         delay: 50,
         btnUseAnimatedStyle: useOffsetAnimatedStyle
       },
-      constant: false
+      constant: false,
+      icon: prevSetData.icon
     },
     {
-      name: 'delete',
-      type: 'antdesign',
-      color: errorColor,
-      size: 30,
+      id: 5,
       condition: true,
       onPress:  () => showAlert('Удаление',`Удалить отмеченные слова (${selectedIDs.length}) из набора?`, 'Удалить', handleDelete),
       disabled: !selectedIDs.length,
@@ -162,7 +146,8 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
         delay: !selectedIDs.length ? 0 : 100,
         btnUseAnimatedStyle: useOffsetAnimatedStyle
       },
-      constant: false
+      constant: false,
+      icon: <AntDesignIcon name={'delete'} color={errorColor} size={30}/>
     }
   ]
 
@@ -174,18 +159,13 @@ const ActionButtons: FC<TProps> = ({setName, setAddModalShown,
 
     if (item.condition)
       return (
-        <Animated.View key={item.name} style={[styles.btnContainer, {bottom: ACTION_BUTTON_SIZE * index + ACTION_BUTTON_SPACING, right: 0},animatedStyles]}>
+        <Animated.View key={item.id} style={[styles.btnContainer, {bottom: ACTION_BUTTON_SIZE * index + ACTION_BUTTON_SPACING, right: 0},animatedStyles]}>
           <TouchableOpacity
             style={[styles.actionBtn]}
             onPress={item.onPress}
             disabled={item.disabled}
           >
-            <Icon
-              name={item.name}
-              type={item.type}
-              color={item.color}
-              size={item.size}
-            />
+            {item.icon}
           </TouchableOpacity>
         </Animated.View>
       )

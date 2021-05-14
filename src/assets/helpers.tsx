@@ -1,5 +1,5 @@
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {Icon} from "react-native-elements";
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import {errorColor, textPrimaryColor, textSecondaryColor} from "./styles";
 import React, {FC} from "react";
 import {Dispatch} from "redux";
@@ -48,9 +48,9 @@ export const MapTranslation: FC<TMapTranslationProps> = ({item, i, arr, allowDel
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
         onPress={() => dispatch(deleteFromAddedMeanings(item))}
       >
-        <Icon
+        <AntDesignIcon
           name='delete'
-          type='antdesign'
+          size={23}
           color={errorColor}
         />
       </TouchableOpacity>

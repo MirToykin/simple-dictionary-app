@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Icon} from "react-native-elements";
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import LoginForm from "../components/forms/LoginForm";
 import {StyleSheet, View} from "react-native";
 import {StackNavigationProp} from "@react-navigation/stack";
@@ -15,10 +15,9 @@ type TProps = {
 const AuthScreen: FC<TProps> = ({type, navigation}) => {
   return (
     <View style={styles.title}>
-      <Icon
+      <FontAwesomeIcon
         style={styles.icon}
         name='book'
-        type='font-awesome'
         color='#fe9700'
         size={60}
       />
@@ -37,7 +36,8 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   icon: {
-    marginBottom: 30
+    marginBottom: 30,
+    textAlign: "center"
   }
 })
 

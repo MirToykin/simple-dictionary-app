@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store/configureStore";
 import {handleAddMeaning, onAddMeaning} from "../../assets/helpers";
 import {setAddedMeanings} from "../../redux/actions/wordsActions";
-import {InputIcon, renderAddMeaningInput} from "../../assets/formElems";
+import {InputIcon, renderCustomInput} from "../../assets/formElems";
 
 
 type TFormData = {
@@ -38,7 +38,7 @@ const AddMeaningForm: FC<TProps & InjectedFormProps<TFormData, TProps>> = ({mean
     <View>
       <Field
         name="meaning"
-        component={renderAddMeaningInput}
+        component={renderCustomInput}
         placeholder={'Добавить значение'}
         rightIcon={<InputIcon onIconPress={onIconPress}/>}
       />

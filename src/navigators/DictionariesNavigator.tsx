@@ -1,7 +1,8 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Icon} from 'react-native-elements'
-import AppHeader from "../components/AppHeader";
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import Header from "../components/Header";
 import NextSetScreen from "../screens/loggedInScreens/dictionaries/NextSetScreen";
 import {primaryBackgroundColor, secondaryBackgroundColor} from "../assets/styles";
 import CurrentSetScreen from "../screens/loggedInScreens/dictionaries/CurrentSetScreen";
@@ -24,7 +25,7 @@ const DictionariesNavigator = () => {
   })
   return (
     <>
-      <AppHeader/>
+      <Header/>
       <Tab.Navigator
         tabBarOptions={{
           activeTintColor: '#f50',
@@ -46,7 +47,7 @@ const DictionariesNavigator = () => {
           options={{
             tabBarLabel: 'На очереди',
             tabBarIcon: ({color, size}) => (
-              <Icon name="angle-double-right" color={color} size={size} type='font-awesome'/>
+              <FontAwesomeIcon name="angle-double-right" color={color} size={size}/>
             ),
           }}
           listeners={commonListeners}
@@ -57,7 +58,7 @@ const DictionariesNavigator = () => {
           options={{
             tabBarLabel: 'На изучении',
             tabBarIcon: ({color, size}) => (
-              <Icon name="graduation-cap" color={color} size={size} type='font-awesome'/>
+              <FontAwesomeIcon name="graduation-cap" color={color} size={size}/>
             ),
           }}
           listeners={commonListeners}
@@ -68,7 +69,7 @@ const DictionariesNavigator = () => {
           options={{
             tabBarLabel: 'Изучено',
             tabBarIcon: ({color, size}) => (
-              <Icon name="done-all" color={color} size={size} type='material'/>
+              <MaterialIcon name="done-all" color={color} size={size}/>
             )
           }}
           listeners={commonListeners}

@@ -1,17 +1,19 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, ReactElement} from 'react';
 
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Icon} from "react-native-elements";
-import {errorColor, secondaryColor, successColor, textPrimaryColor,} from "../../assets/styles";
+import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
+import {errorColor, textPrimaryColor,} from "../../assets/styles";
 import {SetNameType, TSliderSpacer, WordType} from "../../types/types";
 import Animated, {useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming} from "react-native-reanimated";
 import {showAlert} from "../../assets/helpers";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {AppStateType} from "../../redux/store/configureStore";
 import {ThunkDispatch} from "redux-thunk";
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import {
   deleteWords,
-  moveWords,
   setSelectedWord,
   TMoveAndDeleteWords,
   TSetSelectedWordAction
@@ -19,14 +21,6 @@ import {
 import {Dispatch} from "redux";
 import {ACTION_BUTTON_SIZE, CARD_BUTTONS_HEIGHT} from "../../constants";
 
-
-type TSetData = {
-  title: string
-  icon: {
-    name: string
-    type: string
-  }
-}
 type TProps = {
   setModalShown: (shown: boolean) => void
   isSlider: boolean
@@ -39,10 +33,6 @@ const CardActionButtons: FC<TProps> = ({
                                          setModalShown, isSlider, shownSlideWord,
                                          shownSlideWordIndex, flatListRef
 }) => {
-  // useEffect(() => {
-  //   shownSlideWord && dispatch(setSelectedWord(shownSlideWord))
-  // }, [shownSlideWord])
-
   const thunkDispatchMoveAndDelete: ThunkDispatch<AppStateType, unknown, TMoveAndDeleteWords> = useDispatch()
   const dispatch: Dispatch<TSetSelectedWordAction> = useDispatch()
 
@@ -68,41 +58,31 @@ const CardActionButtons: FC<TProps> = ({
   }
 
   type TActionButton = {
-    name: string
-    type: string
-    color: string
-    size: number
+    id: number
     onPress: () => void
+    icon?: ReactElement
   }
   const buttonsArray: Array<TActionButton> = [
     {
-      name: 'angle-double-right',
-      type: 'font-awesome',
-      color: textPrimaryColor,
-      size: 30,
+      id: 1,
+      icon: <FontAwesomeIcon name={'angle-double-right'} color={textPrimaryColor} size={30}/>,
       // onPress: () => {showAlert('Перемещение', `Переместить слово "${word.title}" в набор На очереди?`, 'Переместить', handleMoveToNext)}
       onPress: () => {console.log('press')}
     },
     {
-      name: 'file-edit-outline',
-      type: 'material-community',
-      color: textPrimaryColor,
-      size: 30,
+      id: 2,
+      icon: <MaterialCommunityIcon name={'file-edit-outline'} color={textPrimaryColor} size={30}/>,
       onPress: handleChangeMeanings
       // onPress: () => {}
     },
     {
-      name: 'delete',
-      type: 'antdesign',
-      color: errorColor,
-      size: 30,
+      id: 3,
+      icon: <AntDesignIcon name={'delete'} color={errorColor} size={30}/>,
       onPress: () => showAlert('Удаление',`Удалить слово "${shownSlideWord && shownSlideWord.title}" из набора?`, 'Удалить', handleDelete)
     },
     {
-      name: 'done-all',
-      type: 'material',
-      color: textPrimaryColor,
-      size: 30,
+      id: 4,
+      icon: <MaterialIcon name={'done-all'} color={textPrimaryColor} size={30}/>,
       // onPress: () => {showAlert('Перемещение', `Переместить слово "${word.title}" в набор Изученные?`, 'Переместить', handleMoveToDone)}
       onPress: () => {}
     },
@@ -117,13 +97,8 @@ const CardActionButtons: FC<TProps> = ({
 
   return (
     <Animated.View style={[styles.cardButtonsContainer, animatedStyle, {height: CARD_BUTTONS_HEIGHT}]}>
-      {buttonsArray.map((item) => <TouchableOpacity style={styles.actionBtn} key={item.name} onPress={item.onPress}>
-        <Icon
-          name={item.name}
-          type={item.type}
-          size={item.size}
-          color={item.color}
-        />
+      {buttonsArray.map((item) => <TouchableOpacity style={styles.actionBtn} key={item.id} onPress={item.onPress}>
+        {item.icon}
       </TouchableOpacity>)}
     </Animated.View>
   );

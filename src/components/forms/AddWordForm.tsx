@@ -1,11 +1,10 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {View} from 'react-native';
-import {Field, InjectedFormProps, reduxForm, formValueSelector} from "redux-form";
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store/configureStore";
 import {handleAddMeaning, onAddMeaning} from "../../assets/helpers";
-import {setAddedMeanings} from "../../redux/actions/wordsActions";
-import {InputIcon, renderAddMeaningInput} from "../../assets/formElems";
+import {InputIcon, renderCustomInput} from "../../assets/formElems";
 
 
 type TFormData = {
@@ -32,12 +31,12 @@ const AddWordForm: FC<TProps & InjectedFormProps<TFormData, TProps>> = ({titleVa
     <View>
       <Field
         name="title"
-        component={renderAddMeaningInput}
+        component={renderCustomInput}
         placeholder={'Слово'}
       />
       <Field
         name="meaning"
-        component={renderAddMeaningInput}
+        component={renderCustomInput}
         placeholder={'Значение'}
         rightIcon={<InputIcon onIconPress={onPlusPress}/>}
       />

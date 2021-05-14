@@ -7,8 +7,6 @@ import AuthenticatedNavigator from "./AuthenticatedNavigator";
 import RegistrationScreen from "../screens/RegistrationScreen";
 import ResetPwdScreen from "../screens/ResetPwdScreen";
 import {loginRoute, mainRoute, registrationRoute, resetPwdRoute} from "./constants";
-import {Platform, StyleSheet, View} from 'react-native'
-import {STATUS_BAR_HEIGHT} from "../constants";
 
 export type RootStackParamList = {
   Main: undefined
@@ -21,19 +19,7 @@ const Stack = createStackNavigator<RootStackParamList>()
 
 const RootNavigator = () => {
   const isAuth = useSelector((state:AppStateType) => state.auth.isAuth)
-  const styles = StyleSheet.create({
-    appContainer: {
-      flex: 1,
-      ...Platform.select({
-        android: {
-          marginTop: isAuth ? STATUS_BAR_HEIGHT : 0
-        }
-      })
-
-    }
-  })
   return (
-    <View style={styles.appContainer}>
       <Stack.Navigator screenOptions={{
         headerShown: false,
         gestureEnabled: true,
@@ -52,7 +38,6 @@ const RootNavigator = () => {
           </>
         )}
       </Stack.Navigator>
-    </View>
   )
 }
 

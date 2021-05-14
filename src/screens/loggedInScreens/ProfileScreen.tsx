@@ -4,9 +4,9 @@ import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, logout} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
-import AppHeader from "../../components/AppHeader";
 //@ts-ignore
 import UserPhoto from '../../assets/images/user.png'
+import Header from "../../components/Header";
 
 const ProfileScreen = () => {
   const thunkDispatch: ThunkDispatch<AppStateType, unknown, AuthActionType> = useDispatch()
@@ -27,7 +27,7 @@ const ProfileScreen = () => {
 
   return (
     <>
-      <AppHeader/>
+      <Header/>
       <View style={styles.title}>
         <Image
           source={UserPhoto}

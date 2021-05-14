@@ -5,11 +5,12 @@ import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
 import {AuthActionType, login, TLoginData} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
-import { Button } from 'react-native-elements'
-import {renderAuthInput} from "../../assets/formElems"
+import {renderCustomInput} from "../../assets/formElems"
 import { StackNavigationProp } from '@react-navigation/stack'
 import {RootStackParamList} from "../../navigators/RootNavigator";
-import {authFormStyles  as styles} from '../../assets/styles'
+import {authFormStyles as styles, textSecondaryColor} from '../../assets/styles'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import AuthButton from "../buttons/AuthButton";
 
 type TProps = {
   navigation: StackNavigationProp<RootStackParamList, 'LogIn' | 'Registration' | 'ResetPwd'>
@@ -40,33 +41,24 @@ const LoginForm: FC<TProps & InjectedFormProps<TLoginData, TProps>> = ({handleSu
 
   return (
     <View>
+
       <Field
         name="email"
-        component={renderAuthInput}
+        component={renderCustomInput}
         placeholder={'Адрес эл. почты'}
-        leftIcon={{
-          name: 'envelope',
-          size: 15
-        }}
+        leftIcon={<FontAwesomeIcon name={'envelope'} size={15} color={textSecondaryColor}/>}
       />
       <Field
         name="password"
         secureTextEntry={true}
-        component={renderAuthInput}
+        component={renderCustomInput}
         placeholder={'Пароль'}
-        leftIcon={{
-          name: 'unlock-alt',
-        }}
+        leftIcon={<FontAwesomeIcon name={'unlock-alt'} color={'rgba(255 ,255,255,0.6)'} size={25}/>}
       />
-      <Button
+      <AuthButton
         title="Войти"
-        type="outline"
-        buttonStyle={styles.button}
-        titleStyle={styles.buttonTitle}
-        loadingProps={styles.buttonLoading}
-        containerStyle={styles.buttonContainer}
         onPress={handleSubmit(submit)}
-        loading={isFetching}
+        isLoading={isFetching}
       />
       <View style={styles.additionalButtonsContainer}>
         <TouchableOpacity onPress={() => {navigation.navigate('ResetPwd')}}>

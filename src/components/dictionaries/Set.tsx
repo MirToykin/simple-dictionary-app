@@ -1,12 +1,13 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {
-  Dimensions,
   FlatList,
   ListRenderItem,
   StyleSheet,
   View,
-  Animated as RNAnimated, TouchableOpacity, Text, NativeScrollEvent, NativeSyntheticEvent
+  Animated as RNAnimated, Text
 } from "react-native";
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {SetNameType, TSliderSpacer, WordType} from "../../types/types";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "../../redux/store/configureStore";
@@ -21,7 +22,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import WordItem from "./WordItem";
 import {
-  primaryBackgroundColor, secondaryBackgroundColor, textPrimaryColor
+  primaryBackgroundColor, textPrimaryColor
 } from "../../assets/styles";
 import WordDetailsModal from "./WordDetailsModal";
 import ActionButtons from "./ActionButtons";
@@ -30,13 +31,11 @@ import WordItemCard from "./WordItemCard";
 import CardActionButtons from "./CardActionButtons";
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {
-  CARD_BUTTONS_HEIGHT,
   SLIDE_WIDTH,
   SLIDER_SPACER_WIDTH,
   width,
   height,
-  STATUS_BAR_HEIGHT,
-  HEADER_HEIGHT, TAB_BAR_HEIGHT
+  HEADER_HEIGHT
 } from "../../constants";
 import {Dispatch} from "redux";
 
@@ -66,9 +65,9 @@ const Set: FC<TProps> = ({setName}) => {
 
   const routes: Array<SetNameType> = ['next', 'current', 'done']
   const setData = {
-    next: {title: 'На очереди', icon: {name: 'angle-double-right', type: 'font-awesome'}},
-    current: {title: 'На изучении', icon: {name: 'graduation-cap', type: 'font-awesome'}},
-    done: {title: 'Изучено', icon: {name: 'done-all', type: 'material'}}
+    next: {title: 'На очереди', icon: <FontAwesomeIcon name={'angle-double-right'} size={35} color={textPrimaryColor} style={{paddingLeft: 5}}/>},
+    current: {title: 'На изучении', icon: <FontAwesomeIcon name={'graduation-cap'} size={30} color={textPrimaryColor}/>},
+    done: {title: 'Изучено', icon: <MaterialIcon name={'done-all'} size={30} color={textPrimaryColor}/>}
   }
   const currentSetIndex = routes.indexOf(setName)
   const nextSet = currentSetIndex === routes.length - 1 ? routes[0] : routes[currentSetIndex + 1]

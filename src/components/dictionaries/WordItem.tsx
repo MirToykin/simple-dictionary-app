@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from "react-native";
-import {Icon, Text} from 'react-native-elements';
+import {StyleSheet, TouchableOpacity, View, Text} from "react-native";
+import FeatherIcon from 'react-native-vector-icons/Feather'
 import {WordType} from "../../types/types";
 import {primaryBackgroundColor, primaryColor, secondaryBackgroundColor, textPrimaryColor} from "../../assets/styles";
 import { useDynamicStyle } from 'react-native-dynamic-styles'
@@ -58,7 +58,7 @@ const WordItem: FC<TProps> = ({word, setModalShown, setSelectedIDs}) => {
           onPress={onCheckBoxPress}
           hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
         >
-          {checked && <Icon name={'check'} color={primaryColor} size={20}/>}
+          {checked && <FeatherIcon name={'check'} color={primaryColor} size={20}/>}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.textWrapper}

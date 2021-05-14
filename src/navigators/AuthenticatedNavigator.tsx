@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import {Text, View} from "react-native";
 import ProfileScreen from "../screens/loggedInScreens/ProfileScreen";
 import DictionariesNavigator from "./DictionariesNavigator";
-import AppHeader from "../components/AppHeader";
+import Header from "../components/Header";
 import {dictionariesRoute, profileRoute, testingRoute} from "./constants";
 
 const Drawer = createDrawerNavigator()
@@ -11,7 +11,7 @@ const Drawer = createDrawerNavigator()
 const TestingScreen = () => {
   return (
     <>
-      <AppHeader/>
+      <Header/>
       <View style={{
         flex:1,
         justifyContent: 'center',
